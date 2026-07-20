@@ -1,0 +1,23 @@
+/* BMC 청약센터 디자인 토큰 */
+:root {
+  --bmc-primary: #00778d;
+  --bmc-primary-dark: #005f70;
+  --bmc-secondary: #72c3c8;
+  --bmc-secondary-deep: #128fb1;
+  --bmc-accent: #ffaf00;
+  --bmc-link: #004ea2;
+  --bmc-success: #79c093;
+  --bmc-danger: #da3843;
+  --bmc-bg: #f5f6fa;
+  --bmc-bg-soft: #f4f4f4;
+  --bmc-white: #ffffff;
+  --bmc-text: #222222;
+  --bmc-text-muted: #666666;
+  --bmc-text-light: #999999;
+  --bmc-border: #dddddd;
+  --bmc-header-h: 64px;
+  --bmc-radius: 12px;
+  --bmc-radius-lg: 15px;
+  --bmc-shadow: 0 4px 20px rgba(0, 70, 90, 0.08);
+  --bmc-font: "Noto Sans KR", "Noto Sans", "Malgun Gothic", Dotum, sans-serif;
+}

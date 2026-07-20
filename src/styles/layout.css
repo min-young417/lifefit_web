@@ -1,0 +1,71 @@
+/* 앱 셸 · 워크스페이스 레이아웃 */
+
+#app {
+  margin: 0;
+  min-height: 100vh;
+  text-align: left;
+  color: var(--bmc-text);
+  font-family: var(--bmc-font);
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: var(--bmc-bg);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 340px;
+  height: calc(100vh - var(--bmc-header-h));
+  min-height: 560px;
+}
+
+.workspace__pref,
+.workspace__map,
+.workspace__list {
+  min-height: 0;
+  min-width: 0;
+}
+
+.to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  z-index: 160;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--bmc-border);
+  border-radius: 50%;
+  background: var(--bmc-white);
+  box-shadow: var(--bmc-shadow);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.to-top img {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 1200px) {
+  .workspace {
+    grid-template-columns: 280px minmax(0, 1fr) 300px;
+  }
+}
+
+@media (max-width: 960px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 420px auto;
+    height: auto;
+  }
+
+  .workspace__pref {
+    max-height: none;
+  }
+
+  .workspace__list {
+    min-height: 480px;
+  }
+}

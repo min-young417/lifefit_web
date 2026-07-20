@@ -1,0 +1,87 @@
+/* 재사용 UI 클래스 */
+
+.bmc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--bmc-radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.bmc-btn:active {
+  transform: translateY(1px);
+}
+
+.bmc-btn-primary {
+  background: var(--bmc-primary);
+  color: var(--bmc-white);
+  box-shadow: 0 4px 12px rgba(0, 119, 141, 0.28);
+}
+
+.bmc-btn-primary:hover {
+  background: var(--bmc-primary-dark);
+}
+
+.bmc-btn-ghost {
+  background: var(--bmc-white);
+  color: var(--bmc-primary);
+  border: 1px solid var(--bmc-primary);
+}
+
+.bmc-btn-ghost:hover {
+  background: rgba(0, 119, 141, 0.06);
+}
+
+.bmc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid var(--bmc-border);
+  background: var(--bmc-white);
+  color: var(--bmc-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.bmc-chip.is-active {
+  background: var(--bmc-primary);
+  border-color: var(--bmc-primary);
+  color: var(--bmc-white);
+}
+
+.bmc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.bmc-badge-open {
+  background: rgba(0, 119, 141, 0.12);
+  color: var(--bmc-primary);
+}
+
+.bmc-badge-accent {
+  background: rgba(255, 175, 0, 0.18);
+  color: #b87a00;
+}
+
+.bmc-section-title {
+  margin: 0 0 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--bmc-text);
+}

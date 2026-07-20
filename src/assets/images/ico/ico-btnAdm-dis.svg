@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_70" data-name="사각형 70" width="11.851" height="16.421" fill="none" stroke="#ddd" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="icon" transform="translate(-1482 -132)">
+    <circle id="bg" cx="12" cy="12" r="12" transform="translate(1482 132)" fill="#fff"/>
+    <g id="icon-2" data-name="icon" transform="translate(1488.074 135.789)">
+      <g id="그룹_42" data-name="그룹 42" clip-path="url(#clip-path)">
+        <path id="패스_143" data-name="패스 143" d="M10.256,19.318H5.716A.716.716,0,0,1,5,18.6V7.284L7.416,5h8.137a.716.716,0,0,1,.716.716V18.6a.716.716,0,0,1-.716.716H14.9" transform="translate(-4.709 -4.709)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="패스_144" data-name="패스 144" d="M25.3,23.548v1.785H23.442" transform="translate(-22.076 -22.176)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="선_57" data-name="선 57" x2="6.443" transform="translate(2.709 5.34)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="선_58" data-name="선 58" x2="6.443" transform="translate(2.709 6.915)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="선_59" data-name="선 59" x2="3.221" transform="translate(2.709 8.49)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="패스_145" data-name="패스 145" d="M106.548,164.629a1.885,1.885,0,1,1-1.885-1.885A1.885,1.885,0,0,1,106.548,164.629Z" transform="translate(-96.791 -153.264)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="패스_146" data-name="패스 146" d="M115.744,218.87v3.379l-1.277-.955-1.279.955v-3.381" transform="translate(-106.594 -206.119)" fill="none" stroke="#ddd" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,5 @@
+/* 전역 스타일 엔트리 — main.js에서 한 번만 import */
+@import './tokens.css';
+@import './base.css';
+@import './components.css';
+@import './layout.css';

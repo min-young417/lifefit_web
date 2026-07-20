@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+  <g id="icon" transform="translate(-42 -179)">
+    <rect id="area" width="26" height="26" transform="translate(42 179)" fill="none"/>
+    <g id="icon-2" data-name="icon" transform="translate(43.906 181.656)">
+      <path id="패스_48" data-name="패스 48" d="M155.776,64.267a3.346,3.346,0,1,1,0,6.667Z" transform="translate(-137.565 -57.256)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_49" data-name="패스 49" d="M6.594,64.267a3.333,3.333,0,1,0,0,6.667Z" transform="translate(-2.917 -57.256)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_50" data-name="패스 50" d="M33.764,9.927c0-3.682,3.253-6.667,7.267-6.667S48.3,6.245,48.3,9.927" transform="translate(-30.087 -2.916)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_51" data-name="패스 51" d="M109.655,130.313a5.282,5.282,0,0,0,5.494-5.04" transform="translate(-96.938 -111.596)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_52" data-name="패스 52" d="M83.139,158.137a1.627,1.627,0,1,1-1.627-1.627A1.627,1.627,0,0,1,83.139,158.137Z" transform="translate(-70.517 -139.419)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_54" data-name="패스 54" d="M66.086,73.54a.713.713,0,1,1-.713-.713.713.713,0,0,1,.713.713" transform="translate(-56.955 -65.881)" fill="none" stroke="#fff" stroke-width="1.4"/>
+      <path id="패스_55" data-name="패스 55" d="M112.311,73.54a.713.713,0,1,1-.713-.713.713.713,0,0,1,.713.713" transform="translate(-98.129 -65.881)" fill="none" stroke="#fff" stroke-width="1.4"/>
+      <path id="패스_57" data-name="패스 57" d="M73.424,116.22a3.242,3.242,0,0,1-5.97,0" transform="translate(-59.443 -104.532)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+    </g>
+  </g>
+</svg>

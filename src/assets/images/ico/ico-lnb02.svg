@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+  <g id="icon" transform="translate(-42 -179)">
+    <rect id="area" width="26" height="26" transform="translate(42 179)" fill="none"/>
+    <g id="icon-2" data-name="icon" transform="translate(44.608 181.766)">
+      <path id="패스_34" data-name="패스 34" d="M19.7,21.827V28.82L2.2,28.661V9.449H15.69" transform="translate(-1.97 -8.427)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <line id="선_15" data-name="선 15" x2="6" transform="translate(2.884 4.519)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <line id="선_16" data-name="선 16" x2="4.84" transform="translate(2.884 6.83)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <line id="선_17" data-name="선 17" x2="1.876" transform="translate(2.884 9.141)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_35" data-name="패스 35" d="M50.419,2.2,38.332,14.292h0L36.413,18.8l4.509-1.919L53.009,4.795Z" transform="translate(-32.459 -1.971)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+      <path id="패스_36" data-name="패스 36" d="M140.849,20.067l3.959,3.959-4.751,4.751" transform="translate(-124.831 -17.89)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"/>
+    </g>
+  </g>
+</svg>

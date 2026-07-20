@@ -1,0 +1,4 @@
+<svg id="icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
+  <circle id="bg" cx="12.5" cy="12.5" r="12.5" fill="#8cb808"/>
+  <text id="_50" data-name="50" transform="translate(12 17)" fill="#fff" font-size="13" font-family="Roboto-MediumItalic, Roboto" font-weight="500" font-style="italic"><tspan x="-7.23" y="0">50</tspan></text>
+</svg>
