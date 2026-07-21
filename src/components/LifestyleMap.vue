@@ -31,80 +31,17 @@
     </div>
 
     <div class="map__canvas">
-      <svg class="map__svg" viewBox="0 0 100 80" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#d7eef2" />
-            <stop offset="100%" stop-color="#b9dde4" />
-          </linearGradient>
-          <radialGradient id="heatGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ff6b4a" stop-opacity="0.75" />
-            <stop offset="55%" stop-color="#ffaf00" stop-opacity="0.35" />
-            <stop offset="100%" stop-color="#ffaf00" stop-opacity="0" />
-          </radialGradient>
-          <filter id="soft">
-            <feGaussianBlur stdDeviation="1.2" />
-          </filter>
-        </defs>
+      <div ref="mapEl" class="map__kakao" />
 
-        <!-- 부산 실루엣 느낌의 배경 -->
-        <rect width="100" height="80" fill="url(#sea)" />
-        <path
-          class="land"
-          d="M8,18 C18,10 28,12 38,8 C48,4 58,6 70,10 C82,14 92,12 97,20
-             L96,36 C90,42 88,50 84,58 C78,68 68,72 55,74 C42,76 30,70 22,62
-             C14,54 8,42 6,30 Z"
-          fill="#eef6f4"
-          stroke="#9bb8b8"
-          stroke-width="0.35"
-        />
-        <path
-          d="M40,62 C46,58 52,60 58,64 C62,67 66,66 70,62"
-          fill="none"
-          stroke="#72c3c8"
-          stroke-width="0.6"
-          stroke-dasharray="1.2 1"
-          opacity="0.7"
-        />
+      <div v-if="loadError" class="map__error">
+        <strong>지도를 불러오지 못했습니다</strong>
+        <p>{{ loadError }}</p>
+        <small>프로젝트 루트 .env에 VUE_APP_KAKAO_MAP_KEY를 넣고, 카카오 콘솔에 localhost:8080을 등록하세요.</small>
+      </div>
 
-        <!-- 히트존 -->
-        <g v-if="showHeat" class="heat-layer">
-          <circle
-            v-for="z in enrichedZones"
-            :key="z.id"
-            :cx="z.x"
-            :cy="z.y"
-            :r="z.r * (0.7 + z.intensity * 0.5)"
-            fill="url(#heatGrad)"
-            :opacity="0.35 + z.intensity * 0.55"
-            filter="url(#soft)"
-            class="heat-blob"
-          />
-        </g>
-
-        <!-- 주변 시설 (선택 주택 기준) -->
-        <g v-if="showFacilities && selected && selected.nearby">
-          <g v-for="(f, i) in facilityPoints" :key="i">
-            <circle :cx="f.x" :cy="f.y" r="1.1" fill="#004ea2" opacity="0.85" />
-            <text :x="f.x + 1.6" :y="f.y + 0.6" class="fac-label">{{ f.name }}</text>
-          </g>
-        </g>
-
-        <!-- 주택 핀 -->
-        <g
-          v-for="h in housings"
-          :key="h.id"
-          class="pin"
-          :class="{ 'is-active': selected?.id === h.id, 'is-dim': selected && selected.id !== h.id }"
-          @click="$emit('select', h)"
-        >
-          <circle :cx="h.x" :cy="h.y" r="2.4" class="pin__halo" />
-          <circle :cx="h.x" :cy="h.y" r="1.45" class="pin__dot" />
-          <text :x="h.x" :y="h.y - 3.2" text-anchor="middle" class="pin__score">
-            {{ h.matchScore }}%
-          </text>
-        </g>
-      </svg>
+      <div v-else-if="!mapReady" class="map__loading">
+        지도 불러오는 중…
+      </div>
 
       <div class="map__legend">
         <span><i class="dot heat" />생활권 적합 지역</span>
@@ -124,6 +61,16 @@
 <script>
 import { heatZones } from '../data/mockHousings'
 import { zoneIntensity } from '../utils/matchScore'
+import { loadKakaoMap } from '../utils/loadKakaoMap'
+
+const BUSAN_CENTER = { lat: 35.1796, lng: 129.0756 }
+
+/** 미터 오프셋 → lat/lng (부산 위도 기준 근사) */
+function offsetLatLng(lat, lng, eastM, northM) {
+  const dLat = northM / 111320
+  const dLng = eastM / (111320 * Math.cos((lat * Math.PI) / 180))
+  return { lat: lat + dLat, lng: lng + dLng }
+}
 
 export default {
   name: 'LifestyleMap',
@@ -137,28 +84,208 @@ export default {
     return {
       query: '',
       showHeat: true,
-      showFacilities: true
+      showFacilities: true,
+      mapReady: false,
+      loadError: ''
     }
   },
-  computed: {
-    enrichedZones() {
-      return heatZones.map((z) => ({
-        ...z,
-        intensity: zoneIntensity(z, this.prefs)
-      }))
+  watch: {
+    housings: {
+      deep: true,
+      handler() {
+        this.refreshPins()
+      }
     },
-    facilityPoints() {
-      if (!this.selected?.nearby) return []
-      const baseX = this.selected.x
-      const baseY = this.selected.y
-      return this.selected.nearby.slice(0, 4).map((f, i) => {
-        const angle = (i / 4) * Math.PI * 2 - Math.PI / 3
-        const dist = 5 + (i % 2) * 2
-        return {
-          name: f.name,
-          x: baseX + Math.cos(angle) * dist,
-          y: baseY + Math.sin(angle) * dist
+    selected(next) {
+      this.refreshPins()
+      this.refreshFacilities()
+      if (next?.lat != null && next?.lng != null && this.map) {
+        this.map.panTo(new this.kakaoMaps.LatLng(next.lat, next.lng))
+      }
+    },
+    prefs: {
+      deep: true,
+      handler() {
+        this.refreshHeat()
+      }
+    },
+    showHeat(v) {
+      this.setHeatVisible(v)
+    },
+    showFacilities() {
+      this.refreshFacilities()
+    }
+  },
+  mounted() {
+    this.initMap()
+  },
+  beforeUnmount() {
+    this.clearPins()
+    this.clearHeat()
+    this.clearFacilities()
+    this.map = null
+    this.kakaoMaps = null
+  },
+  methods: {
+    async initMap() {
+      try {
+        const maps = await loadKakaoMap()
+        this.kakaoMaps = maps
+        const center = new maps.LatLng(BUSAN_CENTER.lat, BUSAN_CENTER.lng)
+        this.map = new maps.Map(this.$refs.mapEl, {
+          center,
+          level: 8
+        })
+        this.pinOverlays = new Map()
+        this.heatCircles = []
+        this.facilityOverlays = []
+        this.mapReady = true
+        this.refreshHeat()
+        this.refreshPins()
+        this.refreshFacilities()
+        if (this.selected?.lat != null) {
+          this.map.panTo(new maps.LatLng(this.selected.lat, this.selected.lng))
         }
+      } catch (err) {
+        this.loadError = err?.message || String(err)
+      }
+    },
+
+    clearPins() {
+      if (!this.pinOverlays) return
+      this.pinOverlays.forEach((overlay) => overlay.setMap(null))
+      this.pinOverlays.clear()
+    },
+
+    refreshPins() {
+      if (!this.map || !this.kakaoMaps) return
+      const maps = this.kakaoMaps
+      const ids = new Set(this.housings.map((h) => h.id))
+
+      this.pinOverlays.forEach((overlay, id) => {
+        if (!ids.has(id)) {
+          overlay.setMap(null)
+          this.pinOverlays.delete(id)
+        }
+      })
+
+      this.housings.forEach((h) => {
+        if (h.lat == null || h.lng == null) return
+        const active = this.selected?.id === h.id
+        const dim = this.selected && !active
+        const content = this.buildPinContent(h, active, dim)
+
+        let overlay = this.pinOverlays.get(h.id)
+        if (overlay) {
+          overlay.setContent(content)
+          overlay.setPosition(new maps.LatLng(h.lat, h.lng))
+          this.bindPinClick(content, h)
+        } else {
+          overlay = new maps.CustomOverlay({
+            position: new maps.LatLng(h.lat, h.lng),
+            content,
+            yAnchor: 1,
+            zIndex: active ? 20 : 10
+          })
+          overlay.setMap(this.map)
+          this.pinOverlays.set(h.id, overlay)
+          this.bindPinClick(content, h)
+        }
+        overlay.setZIndex(active ? 20 : 10)
+      })
+    },
+
+    buildPinContent(housing, active, dim) {
+      const el = document.createElement('button')
+      el.type = 'button'
+      el.className = 'kakao-pin'
+      if (active) el.classList.add('is-active')
+      if (dim) el.classList.add('is-dim')
+      el.innerHTML = `
+        <span class="kakao-pin__score">${housing.matchScore ?? 0}%</span>
+        <span class="kakao-pin__halo"></span>
+        <span class="kakao-pin__dot"></span>
+      `
+      return el
+    },
+
+    bindPinClick(el, housing) {
+      el.onclick = (e) => {
+        e.stopPropagation()
+        this.$emit('select', housing)
+      }
+    },
+
+    clearHeat() {
+      if (!this.heatCircles) return
+      this.heatCircles.forEach((c) => c.setMap(null))
+      this.heatCircles = []
+    },
+
+    refreshHeat() {
+      if (!this.map || !this.kakaoMaps) return
+      this.clearHeat()
+      const maps = this.kakaoMaps
+
+      heatZones.forEach((z) => {
+        const intensity = zoneIntensity(z, this.prefs)
+        const radius = Math.round(z.radiusMeters * (0.7 + intensity * 0.5))
+        const circle = new maps.Circle({
+          center: new maps.LatLng(z.lat, z.lng),
+          radius,
+          strokeWeight: 0,
+          fillColor: '#ff6b4a',
+          fillOpacity: 0.18 + intensity * 0.35
+        })
+        if (this.showHeat) circle.setMap(this.map)
+        this.heatCircles.push(circle)
+      })
+    },
+
+    setHeatVisible(visible) {
+      if (!this.heatCircles) return
+      this.heatCircles.forEach((c) => c.setMap(visible ? this.map : null))
+    },
+
+    clearFacilities() {
+      if (!this.facilityOverlays) return
+      this.facilityOverlays.forEach((o) => o.setMap(null))
+      this.facilityOverlays = []
+    },
+
+    refreshFacilities() {
+      if (!this.map || !this.kakaoMaps) return
+      this.clearFacilities()
+      if (!this.showFacilities || !this.selected?.nearby?.length) return
+      if (this.selected.lat == null || this.selected.lng == null) return
+
+      const maps = this.kakaoMaps
+      const baseLat = this.selected.lat
+      const baseLng = this.selected.lng
+      const items = this.selected.nearby.slice(0, 4)
+
+      items.forEach((f, i) => {
+        const angle = (i / 4) * Math.PI * 2 - Math.PI / 3
+        const dist = 450 + (i % 2) * 180
+        const { lat, lng } = offsetLatLng(
+          baseLat,
+          baseLng,
+          Math.cos(angle) * dist,
+          Math.sin(angle) * dist
+        )
+        const content = document.createElement('div')
+        content.className = 'kakao-fac'
+        content.innerHTML = `<i class="kakao-fac__dot"></i><span>${f.name}</span>`
+
+        const overlay = new maps.CustomOverlay({
+          position: new maps.LatLng(lat, lng),
+          content,
+          yAnchor: 0.5,
+          xAnchor: 0,
+          zIndex: 5
+        })
+        overlay.setMap(this.map)
+        this.facilityOverlays.push(overlay)
       })
     }
   }
@@ -207,66 +334,50 @@ export default {
   overflow: hidden;
 }
 
-.map__svg {
+.map__kakao {
   width: 100%;
   height: 100%;
-  display: block;
+  min-height: 320px;
 }
 
-.heat-blob {
-  animation: pulse 3.2s ease-in-out infinite;
-  transform-origin: center;
-  transform-box: fill-box;
+.map__loading,
+.map__error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(227, 238, 241, 0.92);
+  z-index: 2;
+  font-size: 0.875rem;
+  color: var(--bmc-text-muted);
 }
 
-.heat-blob:nth-child(2n) {
-  animation-delay: -1.2s;
+.map__error strong {
+  color: var(--bmc-primary);
+  font-size: 0.95rem;
 }
 
-.pin {
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+.map__error p {
+  margin: 0;
+  color: var(--bmc-text);
+  max-width: 360px;
 }
 
-.pin.is-dim {
-  opacity: 0.35;
-}
-
-.pin__halo {
-  fill: rgba(0, 119, 141, 0.18);
-}
-
-.pin__dot {
-  fill: var(--bmc-primary);
-  stroke: #fff;
-  stroke-width: 0.35;
-}
-
-.pin.is-active .pin__dot {
-  fill: var(--bmc-accent);
-}
-
-.pin.is-active .pin__halo {
-  fill: rgba(255, 175, 0, 0.28);
-}
-
-.pin__score {
-  font-size: 2.2px;
-  font-weight: 700;
-  fill: var(--bmc-text);
-  pointer-events: none;
-}
-
-.fac-label {
-  font-size: 1.8px;
-  fill: var(--bmc-link);
-  font-weight: 600;
+.map__error small {
+  max-width: 380px;
+  line-height: 1.4;
 }
 
 .map__legend {
   position: absolute;
   left: 12px;
   bottom: 12px;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -276,6 +387,7 @@ export default {
   font-size: 0.75rem;
   color: var(--bmc-text-muted);
   box-shadow: var(--bmc-shadow);
+  pointer-events: none;
 }
 
 .map__legend .dot {
@@ -302,6 +414,7 @@ export default {
   position: absolute;
   right: 12px;
   top: 12px;
+  z-index: 3;
   width: min(240px, 70%);
   padding: 12px 14px;
   border-radius: 12px;
@@ -330,16 +443,6 @@ export default {
   font-size: 0.72rem;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 0.95;
-  }
-}
-
 @keyframes popIn {
   from {
     opacity: 0;
@@ -349,5 +452,88 @@ export default {
     opacity: 1;
     transform: translateY(0);
   }
+}
+</style>
+
+<!-- CustomOverlay는 map 밖에 붙어 scoped가 적용되지 않음 → 전역 핀/시설 스타일 -->
+<style>
+.kakao-pin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease;
+}
+
+.kakao-pin.is-dim {
+  opacity: 0.35;
+}
+
+.kakao-pin__score {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bmc-text, #1a2b2e);
+  white-space: nowrap;
+  text-shadow: 0 0 4px #fff, 0 1px 2px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.kakao-pin__halo {
+  position: absolute;
+  bottom: -4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 119, 141, 0.18);
+  pointer-events: none;
+}
+
+.kakao-pin.is-active .kakao-pin__halo {
+  background: rgba(255, 175, 0, 0.28);
+}
+
+.kakao-pin__dot {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bmc-primary, #00778d);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.kakao-pin.is-active .kakao-pin__dot {
+  background: var(--bmc-accent, #ffaf00);
+  width: 16px;
+  height: 16px;
+}
+
+.kakao-fac {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bmc-link, #004ea2);
+  text-shadow: 0 0 3px #fff;
+  pointer-events: none;
+}
+
+.kakao-fac__dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #004ea2;
+  opacity: 0.9;
+  flex-shrink: 0;
 }
 </style>

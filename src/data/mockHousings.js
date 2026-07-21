@@ -30,11 +30,11 @@ export const HOUSING_TYPES = [
 ]
 
 export const COMMUTE_HUBS = [
-  { id: 'centum', label: '센텀시티', x: 72, y: 38 },
-  { id: 'seomyeon', label: '서면', x: 48, y: 48 },
-  { id: 'haeundae', label: '해운대', x: 82, y: 36 },
-  { id: 'nampo', label: '남포동', x: 38, y: 62 },
-  { id: 'pnu', label: '부산대', x: 58, y: 28 }
+  { id: 'centum', label: '센텀시티', lat: 35.1695, lng: 129.131 },
+  { id: 'seomyeon', label: '서면', lat: 35.1578, lng: 129.0592 },
+  { id: 'haeundae', label: '해운대', lat: 35.1587, lng: 129.1604 },
+  { id: 'nampo', label: '남포동', lat: 35.0975, lng: 129.032 },
+  { id: 'pnu', label: '부산대', lat: 35.2335, lng: 129.0808 }
 ]
 
 export const mockHousings = [
@@ -50,8 +50,8 @@ export const mockHousings = [
     areaMax: 36,
     status: 'open',
     builtYear: 2022,
-    x: 68,
-    y: 44,
+    lat: 35.1532,
+    lng: 129.1186,
     imageHue: 190,
     lifestyleTags: ['culture', 'leisure', 'nature'],
     summary: '카페·헬스 밀집 + 해변 접근형',
@@ -80,8 +80,8 @@ export const mockHousings = [
     areaMax: 39,
     status: 'open',
     builtYear: 2021,
-    x: 36,
-    y: 46,
+    lat: 35.1624,
+    lng: 128.9846,
     imageHue: 165,
     lifestyleTags: ['startup', 'transit', 'shopping'],
     summary: '직장·환승 중심 + 생활편의형',
@@ -109,8 +109,8 @@ export const mockHousings = [
     areaMax: 49,
     status: 'open',
     builtYear: 2018,
-    x: 58,
-    y: 26,
+    lat: 35.2312,
+    lng: 129.0845,
     imageHue: 140,
     lifestyleTags: ['nature', 'leisure', 'culture'],
     summary: '캠퍼스·산책 + 한산한 주거형',
@@ -138,8 +138,8 @@ export const mockHousings = [
     areaMax: 45,
     status: 'soon',
     builtYear: 2019,
-    x: 84,
-    y: 34,
+    lat: 35.1566,
+    lng: 129.1465,
     imageHue: 210,
     lifestyleTags: ['leisure', 'shopping', 'culture'],
     summary: '해변·쇼핑·여가 밀집형',
@@ -167,8 +167,8 @@ export const mockHousings = [
     areaMax: 51,
     status: 'open',
     builtYear: 2020,
-    x: 52,
-    y: 42,
+    lat: 35.1862,
+    lng: 129.0815,
     imageHue: 175,
     lifestyleTags: ['transit', 'shopping', 'startup'],
     summary: '시청·환승 + 생활편의 균형형',
@@ -196,8 +196,8 @@ export const mockHousings = [
     areaMax: 36,
     status: 'open',
     builtYear: 2023,
-    x: 62,
-    y: 56,
+    lat: 35.1245,
+    lng: 129.1135,
     imageHue: 200,
     lifestyleTags: ['nature', 'leisure', 'culture'],
     summary: '오션뷰·공원 + 조용한 주거형',
@@ -225,8 +225,8 @@ export const mockHousings = [
     areaMax: 59,
     status: 'closed',
     builtYear: 2015,
-    x: 42,
-    y: 22,
+    lat: 35.2345,
+    lng: 129.0135,
     imageHue: 120,
     lifestyleTags: ['shopping', 'nature', 'leisure'],
     summary: '신도시형 편의 + 가족 주거',
@@ -254,8 +254,8 @@ export const mockHousings = [
     areaMax: 39,
     status: 'open',
     builtYear: 2024,
-    x: 92,
-    y: 18,
+    lat: 35.2605,
+    lng: 129.2335,
     imageHue: 195,
     lifestyleTags: ['nature', 'leisure', 'startup'],
     summary: '해변 신도시 + 워케이션형',
@@ -273,11 +273,12 @@ export const mockHousings = [
   }
 ]
 
+/** radiusMeters: 카카오 Circle 반경(m) */
 export const heatZones = [
-  { id: 'z1', x: 68, y: 44, r: 14, focus: 'cafe' },
-  { id: 'z2', x: 84, y: 34, r: 12, focus: 'nature' },
-  { id: 'z3', x: 48, y: 48, r: 11, focus: 'transit' },
-  { id: 'z4', x: 36, y: 46, r: 10, focus: 'mart' },
-  { id: 'z5', x: 58, y: 28, r: 9, focus: 'culture' },
-  { id: 'z6', x: 92, y: 18, r: 10, focus: 'nature' }
+  { id: 'z1', lat: 35.1532, lng: 129.1186, radiusMeters: 1400, focus: 'cafe' },
+  { id: 'z2', lat: 35.1566, lng: 129.1465, radiusMeters: 1200, focus: 'nature' },
+  { id: 'z3', lat: 35.1578, lng: 129.0592, radiusMeters: 1100, focus: 'transit' },
+  { id: 'z4', lat: 35.1624, lng: 128.9846, radiusMeters: 1000, focus: 'mart' },
+  { id: 'z5', lat: 35.2312, lng: 129.0845, radiusMeters: 900, focus: 'culture' },
+  { id: 'z6', lat: 35.2605, lng: 129.2335, radiusMeters: 1000, focus: 'nature' }
 ]
