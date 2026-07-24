@@ -48,12 +48,6 @@
         <span><i class="dot pin" />추천 주택</span>
         <span v-if="showFacilities"><i class="dot fac" />주변 시설</span>
       </div>
-
-      <div v-if="selected" class="map__popup">
-        <strong>{{ selected.name }}</strong>
-        <p>{{ selected.summary }}</p>
-        <small>{{ selected.district }} · 매칭 {{ selected.matchScore }}%</small>
-      </div>
     </div>
   </section>
 </template>
@@ -410,49 +404,6 @@ export default {
   background: var(--bmc-link);
 }
 
-.map__popup {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  z-index: 3;
-  width: min(240px, 70%);
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: var(--bmc-shadow);
-  border-left: 4px solid var(--bmc-primary);
-  animation: popIn 0.25s ease;
-}
-
-.map__popup strong {
-  display: block;
-  font-size: 0.9rem;
-  color: var(--bmc-primary);
-  margin-bottom: 4px;
-}
-
-.map__popup p {
-  margin: 0 0 6px;
-  font-size: 0.8rem;
-  color: var(--bmc-text);
-  line-height: 1.4;
-}
-
-.map__popup small {
-  color: var(--bmc-text-muted);
-  font-size: 0.72rem;
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 </style>
 
 <!-- CustomOverlay는 map 밖에 붙어 scoped가 적용되지 않음 → 전역 핀/시설 스타일 -->

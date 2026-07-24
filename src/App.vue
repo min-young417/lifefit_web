@@ -15,29 +15,40 @@
         @search="onSearch"
       />
 
-      <LifestyleMap
-        class="workspace__map"
-        :housings="filteredResults"
-        :prefs="activePrefs"
-        :selected="selected"
-        @select="selectHousing"
-        @query="onMapQuery"
-      />
+      <div class="workspace__main">
+        <RecommendList
+          class="workspace__list"
+          :items="filteredResults"
+          :loading="loading"
+          :searched="searched"
+          :selected-id="selected?.id"
+          :compare-ids="compareIds"
+          @select="selectHousing"
+          @toggle-compare="toggleCompare"
+        />
 
-      <RecommendList
-        class="workspace__list"
-        :items="filteredResults"
-        :loading="loading"
-        :searched="searched"
-        :selected-id="selected?.id"
-        :compare-ids="compareIds"
-        @select="selectHousing"
-        @open-report="openReport"
-        @toggle-compare="toggleCompare"
-      />
+        <LifestyleMap
+          class="workspace__map"
+          :housings="filteredResults"
+          :prefs="activePrefs"
+          :selected="selected"
+          @select="selectHousing"
+          @query="onMapQuery"
+        />
+
+        <SelectedInsight
+          class="workspace__insight"
+          :housing="selected"
+          @open-report="openReport"
+        />
+      </div>
     </main>
 
-    <AiReportDrawer :housing="reportHousing" @close="reportHousing = null" />
+    <AiReportDrawer
+      :housing="reportHousing"
+      :peers="filteredResults"
+      @close="reportHousing = null"
+    />
 
     <CompareBar
       :items="compareItems"
@@ -65,6 +76,7 @@ import LandingHero from './components/LandingHero.vue'
 import PreferencePanel from './components/PreferencePanel.vue'
 import LifestyleMap from './components/LifestyleMap.vue'
 import RecommendList from './components/RecommendList.vue'
+import SelectedInsight from './components/SelectedInsight.vue'
 import AiReportDrawer from './components/AiReportDrawer.vue'
 import CompareBar from './components/CompareBar.vue'
 import { mockHousings } from './data/mockHousings'
@@ -93,6 +105,7 @@ export default {
     PreferencePanel,
     LifestyleMap,
     RecommendList,
+    SelectedInsight,
     AiReportDrawer,
     CompareBar
   },
