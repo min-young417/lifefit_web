@@ -23,6 +23,7 @@
           :searched="searched"
           :selected-id="selected?.id"
           :compare-ids="compareIds"
+          :no-filters-active="noFiltersActive"
           @select="selectHousing"
           @toggle-compare="toggleCompare"
         />
@@ -155,6 +156,17 @@ export default {
       const q = this.nameQuery.trim().toLowerCase()
       if (!q) return this.results
       return this.results.filter((h) => h.name.toLowerCase().includes(q))
+    },
+    noFiltersActive() {
+      const p = this.activePrefs
+      return !p.eligibility?.length &&
+        !p.types?.length &&
+        !p.lifestyles?.length &&
+        !p.districts?.length &&
+        p.depositMax === 5000 &&
+        p.areaMin === 0 &&
+        p.areaMax === 120 &&
+        !p.commuteDestination
     },
     compareItems() {
       return this.compareIds

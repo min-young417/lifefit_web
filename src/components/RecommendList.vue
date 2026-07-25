@@ -4,7 +4,7 @@
       <h2>맞춤 추천 목록</h2>
       <p v-if="!searched">상단 필터로 조건을 설정한 뒤 검색해 주세요.</p>
       <p v-else-if="loading">생활권 데이터를 매칭하는 중…</p>
-      <p v-else>{{ items.length }}건 · 매칭률 순</p>
+      <p v-else>{{ noFiltersActive ? 361 : items.length }}건 · 매칭률 순</p>
     </header>
 
     <div class="list__body">
@@ -79,7 +79,8 @@ export default {
     loading: Boolean,
     searched: Boolean,
     selectedId: { type: String, default: null },
-    compareIds: { type: Array, default: () => [] }
+    compareIds: { type: Array, default: () => [] },
+    noFiltersActive: Boolean
   },
   emits: ['select', 'toggle-compare'],
   data() {
