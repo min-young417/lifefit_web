@@ -1,7 +1,16 @@
+/**
+ * 카카오맵 경로 조회 REST API (2026-07-21 신규 오픈)
+ * - 대중교통 경로 조회: GET https://dapi.kakao.com/v2/routing/publictraffic
+ * - 도보 경로 조회:     GET https://dapi.kakao.com/v2/routing/walk
+ * 이 API는 브라우저 직접 호출을 CORS로 막고 있어서, 개발/배포 모두 프록시를 거칩니다.
+ * - 개발 서버(npm run serve): vue.config.js의 devServer.proxy (/kakao-api)
+ * - 배포(Vercel): /api/kakao-routing/[type].js 서버리스 함수
+ *   → Vercel 프로젝트에 KAKAO_REST_API_KEY 환경변수 설정 필요 (VUE_APP_ 접두사 없이)
+ */
 
-const API_BASE = process.env.NODE_ENV === 'development' ? '/kakao-api' : 'https://dapi.kakao.com'
-const TRANSIT_URL = `${API_BASE}/v2/routing/publictraffic`
-const WALK_URL = `${API_BASE}/v2/routing/walk`
+const API_BASE = process.env.NODE_ENV === 'development' ? '/kakao-api/v2/routing' : '/api/kakao-routing'
+const TRANSIT_URL = `${API_BASE}/publictraffic`
+const WALK_URL = `${API_BASE}/walk`
 
 const TRANSIT_STATUS_LABEL = {
   STARTNODES_NULL: '출발지 주변에 대중교통으로 접근 가능한 지점이 없습니다',
@@ -20,12 +29,16 @@ const WALK_STATUS_LABEL = {
   ROUTE_RESULT_NOT_FOUND: '도보 경로를 찾지 못했습니다'
 }
 
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 function restKey() {
   return process.env.VUE_APP_KAKAO_REST_API_KEY
 }
 
-function authHeader() {
-  return { Authorization: `KakaoAK ${restKey()}` }
+/** 개발 서버(프록시가 인증 안 붙여줌)에서만 클라이언트 키를 직접 첨부.
+ * 배포 환경은 /api/kakao-routing 서버리스 함수가 자체 키로 인증하므로 불필요 */
+function authHeaders() {
+  return IS_DEV ? { Authorization: `KakaoAK ${restKey()}` } : {}
 }
 
 /** 실패 응답 본문에서 카카오가 내려주는 실제 사유(message/msg)를 최대한 뽑아냄 */
@@ -51,7 +64,7 @@ function flattenPoints(pointArrays) {
  * @returns {Promise<{totalTime:number, totalDistance:number, transfers:number, type:string, fare:number|null, steps:object[], points:object[]}|null>}
  */
 export async function fetchTransitRoute(origin, destination) {
-  if (!restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
+  if (IS_DEV && !restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
 
   const params = new URLSearchParams({
     start_x: String(origin.lng),
@@ -62,7 +75,7 @@ export async function fetchTransitRoute(origin, destination) {
     e_name: destination.name || '도착'
   })
 
-  const res = await fetch(`${TRANSIT_URL}?${params.toString()}`, { headers: authHeader() })
+  const res = await fetch(`${TRANSIT_URL}?${params.toString()}`, { headers: authHeaders() })
   if (!res.ok) {
     const detail = await readErrorBody(res)
     throw new Error(`대중교통 경로 조회 실패 (HTTP ${res.status})${detail ? ` — ${detail}` : ''}`)
@@ -96,7 +109,7 @@ export async function fetchTransitRoute(origin, destination) {
  * @returns {Promise<{totalTime:number, totalDistance:number, points:object[]}|null>}
  */
 export async function fetchWalkRoute(origin, destination) {
-  if (!restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
+  if (IS_DEV && !restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
 
   const params = new URLSearchParams({
     start_x: String(origin.lng),
@@ -107,7 +120,7 @@ export async function fetchWalkRoute(origin, destination) {
     e_name: destination.name || '도착'
   })
 
-  const res = await fetch(`${WALK_URL}?${params.toString()}`, { headers: authHeader() })
+  const res = await fetch(`${WALK_URL}?${params.toString()}`, { headers: authHeaders() })
   if (!res.ok) {
     const detail = await readErrorBody(res)
     throw new Error(`도보 경로 조회 실패 (HTTP ${res.status})${detail ? ` — ${detail}` : ''}`)
