@@ -39,6 +39,7 @@
         <SelectedInsight
           class="workspace__insight"
           :housing="selected"
+          :walk-minutes="activePrefs.walkMinutes"
           @open-report="openReport"
         />
       </div>
@@ -47,6 +48,7 @@
     <AiReportDrawer
       :housing="reportHousing"
       :peers="filteredResults"
+      :walk-minutes="activePrefs.walkMinutes"
       @close="reportHousing = null"
     />
 
@@ -94,7 +96,8 @@ const initialPrefs = () => ({
   areaMax: 60,
   commuteHub: '',
   commuteMinutes: 30,
-  commuteHubLabel: ''
+  commuteHubLabel: '',
+  walkMinutes: 10
 })
 
 export default {
@@ -125,6 +128,12 @@ export default {
       nameQuery: '',
       searchTimer: null,
       showTop: false
+    }
+  },
+  watch: {
+    'prefs.walkMinutes'(v) {
+      // 도보권은 검색 전에도 지도·패널에 즉시 반영
+      this.activePrefs = { ...this.activePrefs, walkMinutes: v }
     }
   },
   mounted() {

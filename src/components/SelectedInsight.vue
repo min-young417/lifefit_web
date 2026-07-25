@@ -74,10 +74,14 @@
         </svg>
       </section>
 
+      <p class="insight__walk">도보 {{ walkMinutes }}분권 · {{ nearbyInWalk.length }}곳</p>
       <ul class="insight__near">
-        <li v-for="(n, i) in (housing.nearby || []).slice(0, 4)" :key="i">
+        <li v-for="(n, i) in nearbyInWalk.slice(0, 6)" :key="i">
           <span>{{ n.name }}</span>
           <em>{{ n.dist }}</em>
+        </li>
+        <li v-if="!nearbyInWalk.length" class="insight__near-empty">
+          <span>이 도보 거리 안 등록 시설이 없습니다</span>
         </li>
       </ul>
 
@@ -89,6 +93,8 @@
 </template>
 
 <script>
+import { filterNearbyByWalk } from '../utils/walkRadius'
+
 const RADAR_KEYS = [
   { key: 'cafe', label: '카페' },
   { key: 'gym', label: '운동' },
@@ -106,10 +112,14 @@ function polar(i, total, r, cx = 80, cy = 80) {
 export default {
   name: 'SelectedInsight',
   props: {
-    housing: { type: Object, default: null }
+    housing: { type: Object, default: null },
+    walkMinutes: { type: Number, default: 10 }
   },
   emits: ['open-report'],
   computed: {
+    nearbyInWalk() {
+      return filterNearbyByWalk(this.housing?.nearby, this.walkMinutes)
+    },
     radarGuides() {
       return [0.35, 0.65, 1].map((scale) =>
         RADAR_KEYS.map((_, i) => {
@@ -264,10 +274,22 @@ export default {
   font-weight: 600;
 }
 
+.insight__walk {
+  margin: 0;
+  padding: 0 16px 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bmc-primary);
+}
+
 .insight__near {
   margin: 0;
   padding: 0 16px 12px;
   list-style: none;
+}
+
+.insight__near-empty span {
+  color: var(--bmc-text-muted);
 }
 
 .insight__near li {

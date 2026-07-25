@@ -48,6 +48,7 @@
           <!-- 주변 상권 -->
           <section class="modal__block">
             <h3>주변 상권 · 생활시설</h3>
+            <p class="modal__walk-hint">도보 {{ walkMinutes }}분 이내</p>
             <ul class="commerce">
               <li v-for="(n, i) in commerceList" :key="i">
                 <span class="commerce__kind">{{ kindLabel(n.kind) }}</span>
@@ -55,7 +56,7 @@
                 <em>{{ n.dist }}</em>
               </li>
             </ul>
-            <p v-if="!commerceList.length" class="modal__empty">등록된 주변 시설이 없습니다.</p>
+            <p v-if="!commerceList.length" class="modal__empty">이 도보 거리 안 등록 시설이 없습니다.</p>
           </section>
 
           <!-- 4분면 가성비 -->
@@ -160,6 +161,7 @@
 <script>
 import { HOUSING_TYPES } from '../data/mockHousings'
 import { assets } from '../assets/images'
+import { filterNearbyByWalk } from '../utils/walkRadius'
 
 const KIND_LABELS = {
   cafe: '카페',
@@ -176,7 +178,8 @@ export default {
   name: 'AiReportDrawer',
   props: {
     housing: { type: Object, default: null },
-    peers: { type: Array, default: () => [] }
+    peers: { type: Array, default: () => [] },
+    walkMinutes: { type: Number, default: 10 }
   },
   emits: ['close'],
   data() {
@@ -187,7 +190,7 @@ export default {
       return HOUSING_TYPES.find((t) => t.id === this.housing?.type)?.label || ''
     },
     commerceList() {
-      return this.housing?.nearby || []
+      return filterNearbyByWalk(this.housing?.nearby, this.walkMinutes)
     },
     plotSet() {
       const list = this.peers?.length ? this.peers : this.housing ? [this.housing] : []
@@ -371,6 +374,13 @@ export default {
   margin: 0 0 10px;
   font-size: 0.88rem;
   color: var(--bmc-text);
+}
+
+.modal__walk-hint {
+  margin: -4px 0 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bmc-primary);
 }
 
 .modal__grid {

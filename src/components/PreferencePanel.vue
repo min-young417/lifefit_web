@@ -145,6 +145,18 @@
               <input v-model.number="local.commuteMinutes" type="range" min="10" max="60" step="5">
             </div>
           </template>
+
+          <!-- 도보 생활권 -->
+          <template v-else-if="item.key === 'walk'">
+            <div class="slider-row">
+              <div class="slider-row__label">
+                <span>도보 가능 거리</span>
+                <strong>{{ local.walkMinutes }}분 · 약 {{ walkMetersLabel }}</strong>
+              </div>
+              <input v-model.number="local.walkMinutes" type="range" min="5" max="20" step="1">
+            </div>
+            <p class="filter-hint">선택 주택 주변 시설·지도 확대 범위에 반영됩니다.</p>
+          </template>
         </div>
       </div>
 
@@ -167,6 +179,7 @@ import {
   COMMUTE_HUBS
 } from '../data/mockHousings'
 import { assets } from '../assets/images'
+import { walkMinutesToMeters } from '../utils/walkRadius'
 
 const defaultPrefs = () => ({
   eligibility: ['youth'],
@@ -178,7 +191,8 @@ const defaultPrefs = () => ({
   areaMin: 20,
   areaMax: 60,
   commuteHub: '',
-  commuteMinutes: 30
+  commuteMinutes: 30,
+  walkMinutes: 10
 })
 
 export default {
@@ -211,6 +225,10 @@ export default {
     }
   },
   computed: {
+    walkMetersLabel() {
+      const m = walkMinutesToMeters(this.local.walkMinutes)
+      return m >= 1000 ? `${(m / 1000).toFixed(1)}km` : `${m}m`
+    },
     menuItems() {
       const elig = this.local.eligibility.length
         ? this.eligibilityOptions
@@ -229,6 +247,7 @@ export default {
         ? `${this.local.districts.length}개 구`
         : '전체'
       const hub = this.commuteHubs.find((h) => h.id === this.local.commuteHub)
+      const walk = this.local.walkMinutes || 10
       return [
         { key: 'eligibility', label: '자격', summary: elig, active: !!this.local.eligibility.length },
         { key: 'types', label: '주택유형', summary: types, active: !!this.local.types.length },
@@ -239,6 +258,12 @@ export default {
           key: 'budget',
           label: '보증금·면적',
           summary: `${this.local.depositMax}만`,
+          active: true
+        },
+        {
+          key: 'walk',
+          label: '도보권',
+          summary: `${walk}분`,
           active: true
         },
         {
@@ -487,6 +512,13 @@ export default {
 
 .filter-select {
   width: 100%;
+}
+
+.filter-hint {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--bmc-text-muted);
 }
 
 @keyframes dropIn {

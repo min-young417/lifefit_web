@@ -45,6 +45,7 @@
 
       <div class="map__legend">
         <span><i class="dot heat" />생활권 적합 지역</span>
+        <span><i class="dot walk" />도보 {{ walkMinutes }}분권</span>
         <span><i class="dot pin" />추천 주택</span>
         <span v-if="showFacilities"><i class="dot fac" />주변 시설</span>
       </div>
@@ -56,6 +57,11 @@
 import { heatZones } from '../data/mockHousings'
 import { zoneIntensity } from '../utils/matchScore'
 import { loadKakaoMap } from '../utils/loadKakaoMap'
+import {
+  filterNearbyByWalk,
+  parseDistMeters,
+  walkMinutesToMeters
+} from '../utils/walkRadius'
 
 const BUSAN_CENTER = { lat: 35.1796, lng: 129.0756 }
 
@@ -80,7 +86,9 @@ export default {
       showHeat: true,
       showFacilities: true,
       mapReady: false,
-      loadError: ''
+      loadError: '',
+      /** 확대(가까이) 시 원형 오버레이 숨김 */
+      circlesHiddenByZoom: false
     }
   },
   watch: {
@@ -93,8 +101,11 @@ export default {
     selected(next) {
       this.refreshPins()
       this.refreshFacilities()
+      this.refreshWalkCircle()
       if (next?.lat != null && next?.lng != null && this.map) {
-        this.map.panTo(new this.kakaoMaps.LatLng(next.lat, next.lng))
+        this.focusLivingArea(next)
+      } else {
+        this.clearWalkCircle()
       }
     },
     prefs: {
@@ -103,8 +114,14 @@ export default {
         this.refreshHeat()
       }
     },
-    showHeat(v) {
-      this.setHeatVisible(v)
+    'prefs.walkMinutes'() {
+      this.refreshHeat()
+      this.refreshFacilities()
+      this.refreshWalkCircle()
+      if (this.selected?.lat != null) this.focusLivingArea(this.selected)
+    },
+    showHeat() {
+      this.applyCircleVisibility()
     },
     showFacilities() {
       this.refreshFacilities()
@@ -113,10 +130,19 @@ export default {
   mounted() {
     this.initMap()
   },
+  computed: {
+    walkMinutes() {
+      return this.prefs?.walkMinutes || 10
+    },
+    walkRadiusM() {
+      return walkMinutesToMeters(this.walkMinutes)
+    }
+  },
   beforeUnmount() {
     this.clearPins()
     this.clearHeat()
     this.clearFacilities()
+    this.clearWalkCircle()
     this.map = null
     this.kakaoMaps = null
   },
@@ -133,16 +159,129 @@ export default {
         this.pinOverlays = new Map()
         this.heatCircles = []
         this.facilityOverlays = []
+        this.walkCircle = null
         this.mapReady = true
+        maps.event.addListener(this.map, 'zoom_changed', () => {
+          this.onZoomChanged()
+        })
         this.refreshHeat()
         this.refreshPins()
         this.refreshFacilities()
+        this.refreshWalkCircle()
+        this.onZoomChanged()
         if (this.selected?.lat != null) {
-          this.map.panTo(new maps.LatLng(this.selected.lat, this.selected.lng))
+          this.focusLivingArea(this.selected)
         }
       } catch (err) {
         this.loadError = err?.message || String(err)
       }
+    },
+
+    /** level이 작을수록 확대. 가까이(≤4)면 히트/도보 원 숨김 */
+    onZoomChanged() {
+      if (!this.map) return
+      const close = this.map.getLevel() <= 4
+      if (close === this.circlesHiddenByZoom) {
+        this.applyCircleVisibility()
+        return
+      }
+      this.circlesHiddenByZoom = close
+      this.applyCircleVisibility()
+    },
+
+    applyCircleVisibility() {
+      const showHeat = this.showHeat && !this.circlesHiddenByZoom
+      if (this.heatCircles) {
+        this.heatCircles.forEach((c) => c.setMap(showHeat ? this.map : null))
+      }
+      if (this.walkCircle) {
+        const showWalk = !this.circlesHiddenByZoom && !!this.selected
+        this.walkCircle.setMap(showWalk ? this.map : null)
+      }
+    },
+
+    /** 선택 주택 + 도보권 생활권이 보이도록 부드럽게 이동·확대 */
+    focusLivingArea(housing) {
+      if (!this.map || !this.kakaoMaps || housing?.lat == null || housing?.lng == null) return
+      const maps = this.kakaoMaps
+      const radiusM = this.walkRadiusM
+      const points = [{ lat: housing.lat, lng: housing.lng }]
+
+      filterNearbyByWalk(housing.nearby, this.walkMinutes).forEach((n) => {
+        if (n.lat != null && n.lng != null) points.push({ lat: n.lat, lng: n.lng })
+      })
+
+      // 도보 반경 박스로 확대 범위 고정
+      points.push(
+        offsetLatLng(housing.lat, housing.lng, radiusM, radiusM),
+        offsetLatLng(housing.lat, housing.lng, -radiusM, -radiusM)
+      )
+
+      const center = new maps.LatLng(housing.lat, housing.lng)
+      const targetLevel = this.estimateLivingLevel(points, radiusM)
+      const animate = { duration: 650 }
+
+      if (typeof this.map.jump === 'function') {
+        this.map.jump(center, targetLevel, { animate })
+        return
+      }
+
+      const bounds = new maps.LatLngBounds()
+      points.forEach((p) => bounds.extend(new maps.LatLng(p.lat, p.lng)))
+      this.map.panTo(bounds, 56)
+      this.map.setLevel(targetLevel, { anchor: center, animate })
+    },
+
+    /** 도보 반경·포인트 범위에 맞는 Kakao 지도 레벨 (작을수록 확대) */
+    estimateLivingLevel(points, radiusM = 800) {
+      const spanFromRadius = radiusM * 2
+      let spanM = spanFromRadius
+      if (points?.length) {
+        let minLat = points[0].lat
+        let maxLat = points[0].lat
+        let minLng = points[0].lng
+        let maxLng = points[0].lng
+        points.forEach((p) => {
+          minLat = Math.min(minLat, p.lat)
+          maxLat = Math.max(maxLat, p.lat)
+          minLng = Math.min(minLng, p.lng)
+          maxLng = Math.max(maxLng, p.lng)
+        })
+        const dLatM = (maxLat - minLat) * 111320
+        const dLngM = (maxLng - minLng) * 111320 * Math.cos((points[0].lat * Math.PI) / 180)
+        spanM = Math.max(dLatM, dLngM, spanFromRadius)
+      }
+      if (spanM < 700) return 4
+      if (spanM < 1200) return 5
+      if (spanM < 2200) return 6
+      if (spanM < 3500) return 7
+      return 8
+    },
+
+    clearWalkCircle() {
+      if (this.walkCircle) {
+        this.walkCircle.setMap(null)
+        this.walkCircle = null
+      }
+    },
+
+    refreshWalkCircle() {
+      if (!this.map || !this.kakaoMaps) return
+      this.clearWalkCircle()
+      if (!this.selected || this.selected.lat == null || this.selected.lng == null) return
+
+      const maps = this.kakaoMaps
+      this.walkCircle = new maps.Circle({
+        center: new maps.LatLng(this.selected.lat, this.selected.lng),
+        radius: this.walkRadiusM,
+        strokeWeight: 2,
+        strokeColor: '#1a7a8a',
+        strokeOpacity: 0.55,
+        strokeStyle: 'dashed',
+        fillColor: '#2aa8bc',
+        fillOpacity: 0.08
+      })
+      this.applyCircleVisibility()
     },
 
     clearPins() {
@@ -220,10 +359,13 @@ export default {
       if (!this.map || !this.kakaoMaps) return
       this.clearHeat()
       const maps = this.kakaoMaps
+      // 도보 10분(800m) 기준 → 입력 도보권에 비례해 빨간 원 반경 조절
+      const walkScale = this.walkRadiusM / 800
 
       heatZones.forEach((z) => {
         const intensity = zoneIntensity(z, this.prefs)
-        const radius = Math.round(z.radiusMeters * (0.7 + intensity * 0.5))
+        const base = z.radiusMeters * (0.55 + intensity * 0.45)
+        const radius = Math.round(Math.max(280, base * walkScale))
         const circle = new maps.Circle({
           center: new maps.LatLng(z.lat, z.lng),
           radius,
@@ -231,14 +373,9 @@ export default {
           fillColor: '#ff6b4a',
           fillOpacity: 0.18 + intensity * 0.35
         })
-        if (this.showHeat) circle.setMap(this.map)
         this.heatCircles.push(circle)
       })
-    },
-
-    setHeatVisible(visible) {
-      if (!this.heatCircles) return
-      this.heatCircles.forEach((c) => c.setMap(visible ? this.map : null))
+      this.applyCircleVisibility()
     },
 
     clearFacilities() {
@@ -256,20 +393,25 @@ export default {
       const maps = this.kakaoMaps
       const baseLat = this.selected.lat
       const baseLng = this.selected.lng
-      const items = this.selected.nearby.slice(0, 4)
+      const items = filterNearbyByWalk(this.selected.nearby, this.walkMinutes).slice(0, 8)
 
       items.forEach((f, i) => {
-        const angle = (i / 4) * Math.PI * 2 - Math.PI / 3
-        const dist = 450 + (i % 2) * 180
-        const { lat, lng } = offsetLatLng(
-          baseLat,
-          baseLng,
-          Math.cos(angle) * dist,
-          Math.sin(angle) * dist
-        )
+        let lat = f.lat
+        let lng = f.lng
+        if (lat == null || lng == null) {
+          const angle = (i / Math.max(items.length, 1)) * Math.PI * 2 - Math.PI / 3
+          const distM = parseDistMeters(f.dist) || Math.min(this.walkRadiusM * 0.7, 450 + (i % 2) * 120)
+          ;({ lat, lng } = offsetLatLng(
+            baseLat,
+            baseLng,
+            Math.cos(angle) * distM,
+            Math.sin(angle) * distM
+          ))
+        }
         const content = document.createElement('div')
         content.className = 'kakao-fac'
-        content.innerHTML = `<i class="kakao-fac__dot"></i><span>${f.name}</span>`
+        const distLabel = f.dist ? ` · ${f.dist}` : ''
+        content.innerHTML = `<i class="kakao-fac__dot"></i><span>${f.name}${distLabel}</span>`
 
         const overlay = new maps.CustomOverlay({
           position: new maps.LatLng(lat, lng),
@@ -394,6 +536,12 @@ export default {
 
 .map__legend .dot.heat {
   background: #ff8a5c;
+}
+
+.map__legend .dot.walk {
+  background: #2aa8bc;
+  border: 1px dashed #1a7a8a;
+  box-sizing: border-box;
 }
 
 .map__legend .dot.pin {
