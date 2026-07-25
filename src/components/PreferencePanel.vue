@@ -55,9 +55,9 @@
             </div>
           </template>
 
-          <!-- 취향 -->
+          <!-- 상세조건 -->
           <template v-else-if="item.key === 'lifestyles'">
-            <div class="chip-row">
+            <div class="chip-row chip-row--wrap">
               <button
                 v-for="tag in lifestyleTags"
                 :key="tag.id"
@@ -68,27 +68,6 @@
               >
                 {{ tag.label }}
               </button>
-            </div>
-          </template>
-
-          <!-- 인프라 -->
-          <template v-else-if="item.key === 'infra'">
-            <div
-              v-for="row in infraItems"
-              :key="row.key"
-              class="slider-row"
-            >
-              <div class="slider-row__label">
-                <span>{{ row.label }}</span>
-                <strong>{{ local.infraWeights[row.key] }}%</strong>
-              </div>
-              <input
-                v-model.number="local.infraWeights[row.key]"
-                type="range"
-                min="0"
-                max="100"
-                step="5"
-              >
             </div>
           </template>
 
@@ -131,18 +110,31 @@
 
           <!-- 통근 -->
           <template v-else-if="item.key === 'commute'">
-            <select v-model="local.commuteHub" class="filter-select">
-              <option value="">선택 안 함</option>
-              <option v-for="hub in commuteHubs" :key="hub.id" :value="hub.id">
-                {{ hub.label }}
-              </option>
-            </select>
-            <div v-if="local.commuteHub" class="slider-row" style="margin-top: 12px">
-              <div class="slider-row__label">
-                <span>희망 이동 시간</span>
-                <strong>{{ local.commuteMinutes }}분 이내</strong>
-              </div>
-              <input v-model.number="local.commuteMinutes" type="range" min="10" max="60" step="5">
+            <label class="commute-search">
+              <input
+                v-model="destQuery"
+                type="text"
+                placeholder="직장, 학교 등 목적지 검색"
+                @keydown.enter.prevent="searchDestination"
+              >
+              <button type="button" class="bmc-btn bmc-btn-primary" @click="searchDestination">
+                검색
+              </button>
+            </label>
+
+            <ul v-if="destResults.length" class="commute-results">
+              <li v-for="r in destResults" :key="r.id">
+                <button type="button" @click="pickDestination(r)">
+                  <strong>{{ r.name }}</strong>
+                  <span>{{ r.address }}</span>
+                </button>
+              </li>
+            </ul>
+            <p v-else-if="destSearched" class="filter-hint">검색 결과가 없습니다.</p>
+
+            <div v-if="local.commuteDestination" class="commute-selected">
+              <span>{{ local.commuteDestination.name }}</span>
+              <button type="button" aria-label="목적지 삭제" @click="clearDestination">×</button>
             </div>
           </template>
 
@@ -166,6 +158,20 @@
       </button>
     </div>
 
+    <div v-if="selectedLifestyleTags.length" class="filter-bar__applied">
+      <span
+        v-for="tag in selectedLifestyleTags"
+        :key="tag.id"
+        class="applied-tag"
+      >
+        {{ tag.label }}
+        <button type="button" :aria-label="`${tag.label} 제거`" @click="toggle('lifestyles', tag.id)">×</button>
+      </span>
+      <button type="button" class="applied-tag applied-tag--clear" @click="local.lifestyles = []">
+        전체 해제
+      </button>
+    </div>
+
     <div v-if="openKey" class="filter-bar__scrim" @click="openKey = null" />
   </div>
 </template>
@@ -175,24 +181,22 @@ import {
   DISTRICTS,
   LIFESTYLE_TAGS,
   ELIGIBILITY_OPTIONS,
-  HOUSING_TYPES,
-  COMMUTE_HUBS
+  HOUSING_TYPES
 } from '../data/mockHousings'
 import { assets } from '../assets/images'
 import { walkMinutesToMeters } from '../utils/walkRadius'
+import { loadKakaoMap } from '../utils/loadKakaoMap'
 
 const defaultPrefs = () => ({
   eligibility: ['youth'],
   types: [],
-  lifestyles: ['leisure', 'culture'],
-  infraWeights: { cafe: 80, gym: 70, culture: 50, mart: 40 },
+  lifestyles: ['cafe', 'transit'],
   districts: [],
   depositMax: 2000,
   areaMin: 20,
   areaMax: 60,
-  commuteHub: '',
-  commuteMinutes: 30,
-  walkMinutes: 10
+  commuteDestination: null,
+  walkMinutes: 15
 })
 
 export default {
@@ -215,16 +219,15 @@ export default {
       lifestyleTags: LIFESTYLE_TAGS,
       eligibilityOptions: ELIGIBILITY_OPTIONS,
       housingTypes: HOUSING_TYPES,
-      commuteHubs: COMMUTE_HUBS,
-      infraItems: [
-        { key: 'cafe', label: '카페·베이커리' },
-        { key: 'gym', label: '피트니스·운동' },
-        { key: 'culture', label: '문화공간' },
-        { key: 'mart', label: '대형마트' }
-      ]
+      destQuery: '',
+      destResults: [],
+      destSearched: false
     }
   },
   computed: {
+    selectedLifestyleTags() {
+      return this.lifestyleTags.filter((t) => this.local.lifestyles.includes(t.id))
+    },
     walkMetersLabel() {
       const m = walkMinutesToMeters(this.local.walkMinutes)
       return m >= 1000 ? `${(m / 1000).toFixed(1)}km` : `${m}m`
@@ -246,13 +249,11 @@ export default {
       const districts = this.local.districts.length
         ? `${this.local.districts.length}개 구`
         : '전체'
-      const hub = this.commuteHubs.find((h) => h.id === this.local.commuteHub)
-      const walk = this.local.walkMinutes || 10
+      const walk = this.local.walkMinutes || 15
       return [
         { key: 'eligibility', label: '자격', summary: elig, active: !!this.local.eligibility.length },
         { key: 'types', label: '주택유형', summary: types, active: !!this.local.types.length },
-        { key: 'lifestyles', label: '취향', summary: life, active: !!this.local.lifestyles.length },
-        { key: 'infra', label: '인프라', summary: '중요도', active: true },
+        { key: 'lifestyles', label: '상세조건', summary: life, active: !!this.local.lifestyles.length },
         { key: 'districts', label: '지역', summary: districts, active: !!this.local.districts.length },
         {
           key: 'budget',
@@ -269,8 +270,8 @@ export default {
         {
           key: 'commute',
           label: '통근',
-          summary: hub ? hub.label : '선택',
-          active: !!this.local.commuteHub
+          summary: this.local.commuteDestination ? this.local.commuteDestination.name : '선택',
+          active: !!this.local.commuteDestination
         }
       ]
     }
@@ -303,12 +304,41 @@ export default {
       else list.push(id)
     },
     submit() {
-      const hub = COMMUTE_HUBS.find((h) => h.id === this.local.commuteHub)
       this.openKey = null
-      this.$emit('search', {
-        ...this.local,
-        commuteHubLabel: hub?.label || ''
-      })
+      this.$emit('search', { ...this.local })
+    },
+    async searchDestination() {
+      const q = this.destQuery.trim()
+      if (!q) return
+      this.destSearched = true
+      try {
+        const maps = await loadKakaoMap()
+        const places = new maps.services.Places()
+        places.keywordSearch(q, (data, status) => {
+          if (status === maps.services.Status.OK) {
+            this.destResults = data.slice(0, 5).map((d) => ({
+              id: d.id,
+              name: d.place_name,
+              address: d.road_address_name || d.address_name,
+              lat: Number(d.y),
+              lng: Number(d.x)
+            }))
+          } else {
+            this.destResults = []
+          }
+        })
+      } catch (err) {
+        this.destResults = []
+      }
+    },
+    pickDestination(r) {
+      this.local.commuteDestination = { name: r.name, lat: r.lat, lng: r.lng }
+      this.destResults = []
+      this.destQuery = ''
+      this.destSearched = false
+    },
+    clearDestination() {
+      this.local.commuteDestination = null
     }
   }
 }
@@ -398,13 +428,62 @@ export default {
   animation: dropIn 0.16s ease;
 }
 
-.filter-dd__panel--districts {
+.filter-dd__panel--districts,
+.filter-dd__panel--lifestyles {
   min-width: 340px;
 }
 
-.filter-dd__panel--infra,
-.filter-dd__panel--budget {
+.filter-dd__panel--budget,
+.filter-dd__panel--commute {
   min-width: 280px;
+}
+
+.filter-bar__applied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px 10px;
+}
+
+.applied-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 6px 0 10px;
+  border-radius: 999px;
+  background: rgba(0, 119, 141, 0.1);
+  color: var(--bmc-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.applied-tag button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bmc-primary);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.applied-tag button:hover {
+  background: rgba(0, 119, 141, 0.15);
+}
+
+.applied-tag--clear {
+  background: transparent;
+  border: 1px dashed var(--bmc-border);
+  color: var(--bmc-text-muted);
+  padding: 0 10px;
+  cursor: pointer;
 }
 
 .filter-bar__scrim {
@@ -512,6 +591,90 @@ export default {
 
 .filter-select {
   width: 100%;
+}
+
+.commute-search {
+  display: flex;
+  gap: 8px;
+}
+
+.commute-search input {
+  flex: 1;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--bmc-border);
+  border-radius: 8px;
+  background: var(--bmc-white);
+  font-size: 0.875rem;
+}
+
+.commute-search .bmc-btn {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.8rem;
+}
+
+.commute-results {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--bmc-border);
+  border-radius: 8px;
+}
+
+.commute-results li + li {
+  border-top: 1px solid var(--bmc-border);
+}
+
+.commute-results button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: var(--bmc-white);
+  text-align: left;
+  cursor: pointer;
+}
+
+.commute-results button:hover {
+  background: var(--bmc-bg);
+}
+
+.commute-results strong {
+  font-size: 0.82rem;
+  color: var(--bmc-text);
+}
+
+.commute-results span {
+  font-size: 0.72rem;
+  color: var(--bmc-text-muted);
+}
+
+.commute-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(0, 119, 141, 0.08);
+  color: var(--bmc-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.commute-selected button {
+  border: none;
+  background: transparent;
+  color: var(--bmc-primary);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .filter-hint {

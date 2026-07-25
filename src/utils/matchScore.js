@@ -1,20 +1,39 @@
 /**
  * 사용자 취향·필터와 주택 생활권 데이터를 매칭해 점수 계산
  */
+import { LIFESTYLE_TAGS } from '../data/mockHousings'
 
-const INFRA_KEYS = ['cafe', 'gym', 'culture', 'mart']
-
-const LIFESTYLE_TO_INFRA = {
-  startup: ['transit', 'cafe'],
-  leisure: ['gym', 'nature'],
-  shopping: ['mart', 'cafe'],
-  culture: ['culture', 'cafe'],
-  nature: ['nature'],
-  transit: ['transit']
-}
+const TAG_LABELS = LIFESTYLE_TAGS.reduce((acc, t) => {
+  acc[t.id] = t.label
+  return acc
+}, {})
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n))
+}
+
+/** 경쟁률(낮을수록 좋음, 대략 1~10배 범위)을 0~99점으로 환산. 정보 없으면 중립값 */
+export function competitionScore(housing) {
+  const rate = housing.competitionRate
+  if (rate == null) return 50
+  return Math.round(clamp(110 - rate * 10, 5, 99))
+}
+
+/** 경쟁률 등급: 3:1 미만 낮음 / 3~6:1 보통 / 6:1 초과 높음 */
+export function competitionLevel(housing) {
+  const rate = housing.competitionRate
+  if (rate == null) return null
+  if (rate < 3) return 'low'
+  if (rate <= 6) return 'mid'
+  return 'high'
+}
+
+export const COMPETITION_LEVEL_LABEL = { low: '낮음', mid: '보통', high: '높음' }
+
+/** 태그 하나에 대한 주택의 점수. 'lowCompetition'은 인프라가 아니라 경쟁률 기반 */
+export function tagScore(housing, tag) {
+  if (tag === 'lowCompetition') return competitionScore(housing)
+  return housing.infra?.[tag] ?? 50
 }
 
 /**
@@ -24,40 +43,25 @@ function clamp(n, min, max) {
  */
 export function scoreHousing(housing, prefs) {
   const reasons = []
-  let score = 0
-  let weightSum = 0
-
-  // 1) 인프라 가중치 (카페/헬스/문화/마트)
-  const weights = prefs.infraWeights || {}
-  INFRA_KEYS.forEach((key) => {
-    const w = (weights[key] ?? 50) / 100
-    const v = housing.infra[key] ?? 50
-    score += v * w
-    weightSum += w
-  })
-
-  // 자연·교통도 라이프스타일 선택 시 반영
   const tags = prefs.lifestyles || []
+  const infra = housing.infra || {}
+
+  // 1) 선택한 조건(태그) 기준 평균 점수. 선택 없으면 전체 인프라 평균
+  let base
   if (tags.length) {
-    let lifeScore = 0
-    tags.forEach((tag) => {
-      const keys = LIFESTYLE_TO_INFRA[tag] || []
-      keys.forEach((k) => {
-        lifeScore += housing.infra[k] ?? 50
-      })
-      if (housing.lifestyleTags?.includes(tag)) {
-        lifeScore += 12
-      }
-    })
-    const lifeAvg = lifeScore / Math.max(1, tags.length * 2)
-    score += lifeAvg * 0.9
-    weightSum += 0.9
-    reasons.push(`선택하신 라이프스타일과 생활권 패턴이 잘 맞습니다`)
+    const vals = tags.map((tag) => tagScore(housing, tag))
+    base = vals.reduce((a, b) => a + b, 0) / vals.length
+    reasons.push('선택하신 조건과 생활권 인프라가 잘 맞습니다')
+  } else {
+    const allVals = Object.values(infra)
+    base = allVals.length ? allVals.reduce((a, b) => a + b, 0) / allVals.length : 50
   }
 
-  let base = weightSum > 0 ? score / weightSum : 50
-
   // 2) 하드 필터 페널티/보너스
+  if (tags.includes('lowCompetition') && housing.competitionRate == null) {
+    return { score: 0, reasons: ['경쟁률 정보 없음'], filtered: true }
+  }
+
   if (prefs.districts?.length && !prefs.districts.includes(housing.district)) {
     return { score: 0, reasons: ['선택 지역 외'], filtered: true }
   }
@@ -100,13 +104,18 @@ export function scoreHousing(housing, prefs) {
     }
   }
 
-  // 4) 인프라 상위 항목 이유
-  const topInfra = INFRA_KEYS
-    .map((k) => ({ k, v: housing.infra[k], w: weights[k] ?? 50 }))
-    .sort((a, b) => b.w - a.w || b.v - a.v)[0]
-  if (topInfra && topInfra.w >= 60) {
-    const labels = { cafe: '카페·베이커리', gym: '피트니스', culture: '문화공간', mart: '대형마트' }
-    reasons.push(`${labels[topInfra.k]} 밀집도가 높은 생활권입니다 (${topInfra.v}점)`)
+  // 4) 선택 조건 중 가장 우수한 항목을 이유로 표시
+  if (tags.length) {
+    const top = tags
+      .map((tag) => ({ tag, v: tagScore(housing, tag) }))
+      .sort((a, b) => b.v - a.v)[0]
+    if (top && top.v >= 70) {
+      if (top.tag === 'lowCompetition') {
+        reasons.push('상대적으로 경쟁률이 낮은 편입니다')
+      } else {
+        reasons.push(`${TAG_LABELS[top.tag] || top.tag} 조건이 특히 우수한 생활권입니다 (${top.v}점)`)
+      }
+    }
   }
 
   if (housing.status === 'open') {
@@ -139,17 +148,10 @@ export function rankHousings(housings, prefs) {
 }
 
 /**
- * 히트맵 존 강도 (0~1)
+ * 히트맵 존 강도 (0~1). 선택한 조건(태그)에 해당하는 존은 진하게, 아니면 기본값
  */
 export function zoneIntensity(zone, prefs) {
-  const w = prefs.infraWeights || {}
-  const map = {
-    cafe: w.cafe ?? 50,
-    gym: w.gym ?? 50,
-    culture: w.culture ?? 50,
-    mart: w.mart ?? 50,
-    nature: Math.max(w.cafe ?? 0, (prefs.lifestyles || []).includes('nature') ? 80 : 40),
-    transit: (prefs.lifestyles || []).includes('transit') ? 85 : 50
-  }
-  return clamp((map[zone.focus] ?? 50) / 100, 0.15, 1)
+  const tags = prefs.lifestyles || []
+  const intensity = tags.includes(zone.focus) ? 0.85 : 0.4
+  return clamp(intensity, 0.15, 1)
 }

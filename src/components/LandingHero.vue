@@ -80,7 +80,7 @@ export default {
     return {
       assets,
       steps: [
-        { title: '취향 입력', desc: '자격·인프라 가중치 설정', img: assets.guide01 },
+        { title: '조건 입력', desc: '자격·상세조건 설정', img: assets.guide01 },
         { title: '생활권 매칭', desc: '상권·시설 데이터로 점수화', img: assets.guide04 },
         { title: 'AI 리포트', desc: '추천 이유·장단점 확인', img: assets.guide03 }
       ]

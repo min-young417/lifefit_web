@@ -5,7 +5,7 @@ export const WALK_SPEED_M_PER_MIN = 80
 /** 도보 분 → 미터 */
 export function walkMinutesToMeters(minutes) {
   const m = Number(minutes)
-  const mins = Number.isFinite(m) && m > 0 ? m : 10
+  const mins = Number.isFinite(m) && m > 0 ? m : 15
   return Math.round(mins * WALK_SPEED_M_PER_MIN)
 }
 

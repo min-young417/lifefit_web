@@ -14,7 +14,7 @@
 
       <div v-else-if="!searched" class="empty">
         <img :src="assets.guide01" alt="" class="empty__img">
-        <p>취향·인프라 가중치를 반영한<br>맞춤 추천이 여기에 표시됩니다.</p>
+        <p>상세조건을 반영한<br>맞춤 추천이 여기에 표시됩니다.</p>
       </div>
 
       <div v-else-if="!items.length" class="empty">

@@ -7,12 +7,18 @@ export const DISTRICTS = [
 ]
 
 export const LIFESTYLE_TAGS = [
-  { id: 'startup', label: '창업·직장', icon: '직' },
-  { id: 'leisure', label: '여가·운동', icon: '운' },
-  { id: 'shopping', label: '편의·쇼핑', icon: '쇼' },
-  { id: 'culture', label: '문화·예술', icon: '문' },
-  { id: 'nature', label: '자연·산책', icon: '산' },
-  { id: 'transit', label: '교통·환승', icon: '교' }
+  { id: 'cafe', label: '카페·핫플' },
+  { id: 'gym', label: '헬스장·필라테스' },
+  { id: 'culture', label: '문화·전시 공간' },
+  { id: 'convenience', label: '편의점·다이소' },
+  { id: 'mart', label: '대형마트 근접' },
+  { id: 'hospital', label: '병원·약국 근접' },
+  { id: 'market', label: '전통시장 근접' },
+  { id: 'parking', label: '주차 여유' },
+  { id: 'transit', label: '대중교통 접근성' },
+  { id: 'childcare', label: '어린이집·유치원 근접' },
+  { id: 'bank', label: '은행 근접' },
+  { id: 'lowCompetition', label: '경쟁률 낮은 집' }
 ]
 
 export const ELIGIBILITY_OPTIONS = [
@@ -24,8 +30,8 @@ export const ELIGIBILITY_OPTIONS = [
 
 export const HOUSING_TYPES = [
   { id: 'happy', label: '행복주택' },
-  { id: 'national', label: '국민임대' },
   { id: 'public', label: '통합공공임대' },
+  { id: 'redevelop', label: '재개발임대' },
   { id: 'purchase', label: '매입임대' }
 ]
 

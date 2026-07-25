@@ -22,6 +22,12 @@
           <span>보증금 {{ housing.depositMin }}–{{ housing.depositMax }}만원</span>
           <span>{{ housing.areaMin }}–{{ housing.areaMax }}㎡</span>
         </p>
+        <p v-if="housing.competitionRate != null" class="insight__competition">
+          최근 경쟁률 <strong>{{ housing.competitionRate }}:1</strong>
+          <span :class="'level-' + competitionLevelId">{{ competitionLevelLabel }}</span>
+          <em>({{ housing.competitionDate }} 모집 기준)</em>
+        </p>
+        <p v-else class="insight__competition insight__competition--none">경쟁률 정보 없음</p>
       </div>
 
       <section class="insight__radar-block">
@@ -74,14 +80,36 @@
         </svg>
       </section>
 
-      <p class="insight__walk">도보 {{ walkMinutes }}분권 · {{ nearbyInWalk.length }}곳</p>
+      <section v-if="commuteDestination" class="insight__commute">
+        <h4>{{ commuteDestination.name }}까지</h4>
+        <p v-if="commuteRouteLoading" class="insight__commute-loading">경로 계산 중…</p>
+        <template v-else>
+          <p v-if="commuteRoute?.transit" class="insight__commute-row">
+            <span class="insight__commute-icon">🚌</span>
+            대중교통 {{ formatDuration(commuteRoute.transit.totalTime) }}
+            <em>{{ commuteRoute.transit.transfers ? `환승 ${commuteRoute.transit.transfers}회` : '환승 없음' }}</em>
+          </p>
+          <p v-if="walkVisible" class="insight__commute-row">
+            <span class="insight__commute-icon">🚶</span>
+            도보 {{ formatDuration(commuteRoute.walk.totalTime) }}
+          </p>
+          <p v-if="!commuteRoute?.transit && !walkVisible" class="insight__commute-empty">
+            {{ commuteEmptyMessage }}
+          </p>
+        </template>
+      </section>
+
+      <p class="insight__walk">도보 {{ walkMinutes }}분권 · {{ nearbyList.length }}곳</p>
       <ul class="insight__near">
-        <li v-for="(n, i) in nearbyInWalk.slice(0, 6)" :key="i">
+        <li v-for="(n, i) in nearbyList.slice(0, 8)" :key="i">
           <span>{{ n.name }}</span>
           <em>{{ n.dist }}</em>
         </li>
-        <li v-if="!nearbyInWalk.length" class="insight__near-empty">
-          <span>이 도보 거리 안 등록 시설이 없습니다</span>
+        <li v-if="!nearbyList.length && !lifestyles.length" class="insight__near-empty">
+          <span>상세조건을 선택하면 실제 상권이 표시됩니다</span>
+        </li>
+        <li v-else-if="!nearbyList.length" class="insight__near-empty">
+          <span>이 도보 거리 안에 해당 시설이 없습니다</span>
         </li>
       </ul>
 
@@ -93,16 +121,25 @@
 </template>
 
 <script>
-import { filterNearbyByWalk } from '../utils/walkRadius'
+import { formatDuration } from '../utils/kakaoRouting'
+import { tagScore, competitionLevel, COMPETITION_LEVEL_LABEL } from '../utils/matchScore'
+import { LIFESTYLE_TAGS } from '../data/mockHousings'
 
-const RADAR_KEYS = [
-  { key: 'cafe', label: '카페' },
-  { key: 'gym', label: '운동' },
-  { key: 'culture', label: '문화' },
-  { key: 'mart', label: '마트' },
-  { key: 'transit', label: '교통' },
-  { key: 'nature', label: '자연' }
+/** 레이더에 6칸이 다 안 찰 때 채워 넣을 우선순위(필수 생활 인프라 위주) */
+const FALLBACK_PRIORITY = [
+  'transit', 'mart', 'hospital', 'cafe', 'convenience', 'culture', 'bank', 'market', 'childcare', 'gym', 'parking'
 ]
+
+const SHORT_LABEL = {
+  cafe: '카페', gym: '헬스', culture: '문화', convenience: '편의점', mart: '마트',
+  hospital: '병원', market: '시장', parking: '주차', transit: '교통', childcare: '육아', bank: '은행',
+  lowCompetition: '경쟁률'
+}
+
+const TAG_IDS = new Set(LIFESTYLE_TAGS.map((t) => t.id))
+
+/** 통근 도보 경로는 30분을 넘으면 화면에 표시하지 않음 */
+const MAX_WALK_COMMUTE_SECONDS = 30 * 60
 
 function polar(i, total, r, cx = 80, cy = 80) {
   const angle = -Math.PI / 2 + (i / total) * Math.PI * 2
@@ -113,45 +150,98 @@ export default {
   name: 'SelectedInsight',
   props: {
     housing: { type: Object, default: null },
-    walkMinutes: { type: Number, default: 10 }
+    walkMinutes: { type: Number, default: 15 },
+    lifestyles: { type: Array, default: () => [] },
+    nearbyPlaces: { type: Array, default: () => [] },
+    commuteDestination: { type: Object, default: null },
+    commuteRoute: { type: Object, default: null },
+    commuteRouteLoading: { type: Boolean, default: false }
   },
   emits: ['open-report'],
   computed: {
-    nearbyInWalk() {
-      return filterNearbyByWalk(this.housing?.nearby, this.walkMinutes)
+    competitionLevelId() {
+      return this.housing ? competitionLevel(this.housing) : null
+    },
+    competitionLevelLabel() {
+      return this.competitionLevelId ? COMPETITION_LEVEL_LABEL[this.competitionLevelId] : ''
+    },
+    walkVisible() {
+      return !!(this.commuteRoute?.walk && this.commuteRoute.walk.totalTime <= MAX_WALK_COMMUTE_SECONDS)
+    },
+    commuteEmptyMessage() {
+      const walk = this.commuteRoute?.walk
+      if (walk && walk.totalTime > MAX_WALK_COMMUTE_SECONDS) {
+        return '도보로 30분 넘게 걸려 표시하지 않습니다'
+      }
+      return this.commuteRoute?.error || '경로를 찾을 수 없습니다'
+    },
+    /** 실제 카카오 장소검색 결과를 카테고리별 최단거리 1곳씩만 남겨 거리순 정렬 */
+    nearbyList() {
+      const sorted = [...this.nearbyPlaces].sort((a, b) => (a.distanceM ?? 9e9) - (b.distanceM ?? 9e9))
+      const seenTags = new Set()
+      const deduped = []
+      sorted.forEach((p) => {
+        if (seenTags.has(p.tag)) return
+        seenTags.add(p.tag)
+        deduped.push(p)
+      })
+      return deduped.map((p) => ({
+        name: p.name,
+        dist: p.distanceM != null
+          ? (p.distanceM >= 1000 ? `${(p.distanceM / 1000).toFixed(1)}km` : `${Math.round(p.distanceM)}m`)
+          : ''
+      }))
+    },
+    /** 선택한 취향 태그를 레이더 축으로. 6개 미만이면 필수 인프라 우선순위로 채움 */
+    radarKeys() {
+      const selected = LIFESTYLE_TAGS
+        .filter((t) => this.lifestyles.includes(t.id))
+        .map((t) => t.id)
+
+      const keys = selected.slice(0, 6)
+      if (keys.length < 6) {
+        for (const id of FALLBACK_PRIORITY) {
+          if (keys.length >= 6) break
+          if (TAG_IDS.has(id) && !keys.includes(id)) keys.push(id)
+        }
+      }
+      return keys.map((id) => ({ key: id, label: SHORT_LABEL[id] || id }))
     },
     radarGuides() {
       return [0.35, 0.65, 1].map((scale) =>
-        RADAR_KEYS.map((_, i) => {
-          const p = polar(i, RADAR_KEYS.length, 52 * scale)
+        this.radarKeys.map((_, i) => {
+          const p = polar(i, this.radarKeys.length, 52 * scale)
           return `${p.x},${p.y}`
         }).join(' ')
       )
     },
     radarAxes() {
-      return RADAR_KEYS.map((_, i) => polar(i, RADAR_KEYS.length, 52))
+      return this.radarKeys.map((_, i) => polar(i, this.radarKeys.length, 52))
     },
     radarPoints() {
       if (!this.housing) return ''
-      return RADAR_KEYS.map((row, i) => {
-        const v = (this.housing.infra?.[row.key] ?? 50) / 100
-        const p = polar(i, RADAR_KEYS.length, 52 * v)
+      return this.radarKeys.map((row, i) => {
+        const v = tagScore(this.housing, row.key) / 100
+        const p = polar(i, this.radarKeys.length, 52 * v)
         return `${p.x},${p.y}`
       }).join(' ')
     },
     radarDots() {
       if (!this.housing) return []
-      return RADAR_KEYS.map((row, i) => {
-        const v = (this.housing.infra?.[row.key] ?? 50) / 100
-        return polar(i, RADAR_KEYS.length, 52 * v)
+      return this.radarKeys.map((row, i) => {
+        const v = tagScore(this.housing, row.key) / 100
+        return polar(i, this.radarKeys.length, 52 * v)
       })
     },
     radarLabels() {
-      return RADAR_KEYS.map((row, i) => {
-        const p = polar(i, RADAR_KEYS.length, 68)
+      return this.radarKeys.map((row, i) => {
+        const p = polar(i, this.radarKeys.length, 68)
         return { ...p, text: row.label }
       })
     }
+  },
+  methods: {
+    formatDuration
   }
 }
 </script>
@@ -250,6 +340,55 @@ export default {
   color: var(--bmc-text-muted);
 }
 
+.insight__competition {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: var(--bmc-text);
+}
+
+.insight__competition strong {
+  color: var(--bmc-primary);
+}
+
+.insight__competition em {
+  font-style: normal;
+  color: var(--bmc-text-muted);
+  font-size: 0.7rem;
+}
+
+.insight__competition span {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.insight__competition span.level-low {
+  background: rgba(46, 158, 79, 0.15);
+  color: #1f7a3d;
+}
+
+.insight__competition span.level-mid {
+  background: rgba(255, 175, 0, 0.18);
+  color: #8a5a00;
+}
+
+.insight__competition span.level-high {
+  background: rgba(226, 62, 87, 0.14);
+  color: #b5203a;
+}
+
+.insight__competition--none {
+  color: var(--bmc-text-muted);
+  font-size: 0.72rem;
+}
+
 .insight__radar-block {
   padding: 14px 12px 8px;
   text-align: center;
@@ -272,6 +411,50 @@ export default {
   font-size: 9px;
   fill: var(--bmc-text-muted);
   font-weight: 600;
+}
+
+.insight__commute {
+  margin: 0 16px 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 78, 162, 0.06);
+  border: 1px solid rgba(0, 78, 162, 0.14);
+}
+
+.insight__commute h4 {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  color: var(--bmc-link, #004ea2);
+}
+
+.insight__commute-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 3px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--bmc-text);
+}
+
+.insight__commute-icon {
+  font-size: 0.9rem;
+}
+
+.insight__commute-row em {
+  font-style: normal;
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--bmc-text-muted);
+}
+
+.insight__commute-loading,
+.insight__commute-empty {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--bmc-text-muted);
 }
 
 .insight__walk {

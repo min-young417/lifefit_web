@@ -179,7 +179,7 @@ export default {
   props: {
     housing: { type: Object, default: null },
     peers: { type: Array, default: () => [] },
-    walkMinutes: { type: Number, default: 10 }
+    walkMinutes: { type: Number, default: 15 }
   },
   emits: ['close'],
   data() {

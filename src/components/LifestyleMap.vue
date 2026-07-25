@@ -48,6 +48,7 @@
         <span><i class="dot walk" />도보 {{ walkMinutes }}분권</span>
         <span><i class="dot pin" />추천 주택</span>
         <span v-if="showFacilities"><i class="dot fac" />주변 시설</span>
+        <span v-if="commuteDestination"><i class="dot dest" />통근 목적지</span>
       </div>
     </div>
   </section>
@@ -57,11 +58,9 @@
 import { heatZones } from '../data/mockHousings'
 import { zoneIntensity } from '../utils/matchScore'
 import { loadKakaoMap } from '../utils/loadKakaoMap'
-import {
-  filterNearbyByWalk,
-  parseDistMeters,
-  walkMinutesToMeters
-} from '../utils/walkRadius'
+import { fetchTransitRoute, fetchWalkRoute } from '../utils/kakaoRouting'
+import { searchNearbyByTags, TAG_COLORS } from '../utils/kakaoPlaces'
+import { filterNearbyByWalk, walkMinutesToMeters } from '../utils/walkRadius'
 
 const BUSAN_CENTER = { lat: 35.1796, lng: 129.0756 }
 
@@ -77,9 +76,10 @@ export default {
   props: {
     housings: { type: Array, default: () => [] },
     prefs: { type: Object, default: () => ({}) },
-    selected: { type: Object, default: null }
+    selected: { type: Object, default: null },
+    commuteDestination: { type: Object, default: null }
   },
-  emits: ['select', 'query'],
+  emits: ['select', 'query', 'commute-route', 'nearby-places'],
   data() {
     return {
       query: '',
@@ -88,7 +88,9 @@ export default {
       mapReady: false,
       loadError: '',
       /** 확대(가까이) 시 원형 오버레이 숨김 */
-      circlesHiddenByZoom: false
+      circlesHiddenByZoom: false,
+      routeRequestId: 0,
+      facilitiesRequestId: 0
     }
   },
   watch: {
@@ -107,6 +109,14 @@ export default {
       } else {
         this.clearWalkCircle()
       }
+      this.refreshCommuteRoute()
+    },
+    commuteDestination: {
+      deep: true,
+      handler() {
+        this.refreshDestinationMarker()
+        this.refreshCommuteRoute()
+      }
     },
     prefs: {
       deep: true,
@@ -114,8 +124,13 @@ export default {
         this.refreshHeat()
       }
     },
+    'prefs.lifestyles': {
+      deep: true,
+      handler() {
+        this.refreshFacilities()
+      }
+    },
     'prefs.walkMinutes'() {
-      this.refreshHeat()
       this.refreshFacilities()
       this.refreshWalkCircle()
       if (this.selected?.lat != null) this.focusLivingArea(this.selected)
@@ -132,7 +147,7 @@ export default {
   },
   computed: {
     walkMinutes() {
-      return this.prefs?.walkMinutes || 10
+      return this.prefs?.walkMinutes || 15
     },
     walkRadiusM() {
       return walkMinutesToMeters(this.walkMinutes)
@@ -143,6 +158,8 @@ export default {
     this.clearHeat()
     this.clearFacilities()
     this.clearWalkCircle()
+    this.clearDestinationMarker()
+    this.clearRoutePolyline()
     this.map = null
     this.kakaoMaps = null
   },
@@ -160,6 +177,8 @@ export default {
         this.heatCircles = []
         this.facilityOverlays = []
         this.walkCircle = null
+        this.destMarker = null
+        this.routePolyline = null
         this.mapReady = true
         maps.event.addListener(this.map, 'zoom_changed', () => {
           this.onZoomChanged()
@@ -168,6 +187,8 @@ export default {
         this.refreshPins()
         this.refreshFacilities()
         this.refreshWalkCircle()
+        this.refreshDestinationMarker()
+        this.refreshCommuteRoute()
         this.onZoomChanged()
         if (this.selected?.lat != null) {
           this.focusLivingArea(this.selected)
@@ -177,10 +198,10 @@ export default {
       }
     },
 
-    /** level이 작을수록 확대. 가까이(≤4)면 히트/도보 원 숨김 */
+    /** level이 작을수록 확대. 가까이(≤5)면 히트/도보 원 숨김 */
     onZoomChanged() {
       if (!this.map) return
-      const close = this.map.getLevel() <= 4
+      const close = this.map.getLevel() <= 5
       if (close === this.circlesHiddenByZoom) {
         this.applyCircleVisibility()
         return
@@ -195,8 +216,7 @@ export default {
         this.heatCircles.forEach((c) => c.setMap(showHeat ? this.map : null))
       }
       if (this.walkCircle) {
-        const showWalk = !this.circlesHiddenByZoom && !!this.selected
-        this.walkCircle.setMap(showWalk ? this.map : null)
+        this.walkCircle.setMap(this.selected ? this.map : null)
       }
     },
 
@@ -251,11 +271,11 @@ export default {
         const dLngM = (maxLng - minLng) * 111320 * Math.cos((points[0].lat * Math.PI) / 180)
         spanM = Math.max(dLatM, dLngM, spanFromRadius)
       }
-      if (spanM < 700) return 4
-      if (spanM < 1200) return 5
-      if (spanM < 2200) return 6
-      if (spanM < 3500) return 7
-      return 8
+      if (spanM < 700) return 3
+      if (spanM < 1200) return 4
+      if (spanM < 2200) return 5
+      if (spanM < 3500) return 6
+      return 7
     },
 
     clearWalkCircle() {
@@ -359,13 +379,11 @@ export default {
       if (!this.map || !this.kakaoMaps) return
       this.clearHeat()
       const maps = this.kakaoMaps
-      // 도보 10분(800m) 기준 → 입력 도보권에 비례해 빨간 원 반경 조절
-      const walkScale = this.walkRadiusM / 800
 
       heatZones.forEach((z) => {
         const intensity = zoneIntensity(z, this.prefs)
         const base = z.radiusMeters * (0.55 + intensity * 0.45)
-        const radius = Math.round(Math.max(280, base * walkScale))
+        const radius = Math.round(Math.max(280, base))
         const circle = new maps.Circle({
           center: new maps.LatLng(z.lat, z.lng),
           radius,
@@ -384,37 +402,39 @@ export default {
       this.facilityOverlays = []
     },
 
-    refreshFacilities() {
+    /** 선택 주택 + 선택 취향 태그 기준으로 카카오 실제 장소검색을 돌려 도보권 안 상권을 표시 */
+    async refreshFacilities() {
       if (!this.map || !this.kakaoMaps) return
       this.clearFacilities()
-      if (!this.showFacilities || !this.selected?.nearby?.length) return
-      if (this.selected.lat == null || this.selected.lng == null) return
+
+      const housing = this.selected
+      const tags = (this.prefs?.lifestyles || []).filter((t) => t !== 'parking' && t !== 'lowCompetition')
+      const ready = this.showFacilities && housing?.lat != null && housing?.lng != null && tags.length
+
+      const requestId = ++this.facilitiesRequestId
+      if (!ready) {
+        this.$emit('nearby-places', [])
+        return
+      }
+
+      let places = []
+      try {
+        places = await searchNearbyByTags({ lat: housing.lat, lng: housing.lng }, this.walkRadiusM, tags)
+      } catch (err) {
+        places = []
+      }
+      if (requestId !== this.facilitiesRequestId) return // 오래된 요청 결과 무시(경합 방지)
 
       const maps = this.kakaoMaps
-      const baseLat = this.selected.lat
-      const baseLng = this.selected.lng
-      const items = filterNearbyByWalk(this.selected.nearby, this.walkMinutes).slice(0, 8)
-
-      items.forEach((f, i) => {
-        let lat = f.lat
-        let lng = f.lng
-        if (lat == null || lng == null) {
-          const angle = (i / Math.max(items.length, 1)) * Math.PI * 2 - Math.PI / 3
-          const distM = parseDistMeters(f.dist) || Math.min(this.walkRadiusM * 0.7, 450 + (i % 2) * 120)
-          ;({ lat, lng } = offsetLatLng(
-            baseLat,
-            baseLng,
-            Math.cos(angle) * distM,
-            Math.sin(angle) * distM
-          ))
-        }
+      places.forEach((f) => {
         const content = document.createElement('div')
         content.className = 'kakao-fac'
-        const distLabel = f.dist ? ` · ${f.dist}` : ''
+        content.style.setProperty('--fac-color', TAG_COLORS[f.tag] || '#004ea2')
+        const distLabel = f.distanceM != null ? ` · ${Math.round(f.distanceM)}m` : ''
         content.innerHTML = `<i class="kakao-fac__dot"></i><span>${f.name}${distLabel}</span>`
 
         const overlay = new maps.CustomOverlay({
-          position: new maps.LatLng(lat, lng),
+          position: new maps.LatLng(f.lat, f.lng),
           content,
           yAnchor: 0.5,
           xAnchor: 0,
@@ -423,6 +443,97 @@ export default {
         overlay.setMap(this.map)
         this.facilityOverlays.push(overlay)
       })
+
+      this.$emit('nearby-places', places)
+    },
+
+    clearDestinationMarker() {
+      if (this.destMarker) {
+        this.destMarker.setMap(null)
+        this.destMarker = null
+      }
+    },
+
+    refreshDestinationMarker() {
+      if (!this.map || !this.kakaoMaps) return
+      this.clearDestinationMarker()
+      const dest = this.commuteDestination
+      if (!dest || dest.lat == null || dest.lng == null) return
+
+      const maps = this.kakaoMaps
+      const content = document.createElement('div')
+      content.className = 'kakao-dest'
+      content.innerHTML = `
+        <span class="kakao-dest__label">${dest.name || '목적지'}</span>
+        <span class="kakao-dest__pin"></span>
+      `
+      this.destMarker = new maps.CustomOverlay({
+        position: new maps.LatLng(dest.lat, dest.lng),
+        content,
+        yAnchor: 1,
+        zIndex: 30
+      })
+      this.destMarker.setMap(this.map)
+    },
+
+    clearRoutePolyline() {
+      if (this.routePolyline) {
+        this.routePolyline.setMap(null)
+        this.routePolyline = null
+      }
+    },
+
+    drawRoutePolyline(points) {
+      this.clearRoutePolyline()
+      if (!this.map || !this.kakaoMaps || !points?.length) return
+      const maps = this.kakaoMaps
+      const path = points.map((p) => new maps.LatLng(p.lat, p.lng))
+      this.routePolyline = new maps.Polyline({
+        path,
+        strokeWeight: 4,
+        strokeColor: '#004ea2',
+        strokeOpacity: 0.85,
+        strokeStyle: 'solid'
+      })
+      this.routePolyline.setMap(this.map)
+    },
+
+    /** 선택 주택 ↔ 통근 목적지의 대중교통·도보 경로를 조회해 지도에 그리고 상위로 알림 */
+    async refreshCommuteRoute() {
+      const dest = this.commuteDestination
+      const housing = this.selected
+      const ready = dest?.lat != null && dest?.lng != null && housing?.lat != null && housing?.lng != null
+
+      if (!ready) {
+        this.routeRequestId += 1
+        this.clearRoutePolyline()
+        this.$emit('commute-route', { loading: false, transit: null, walk: null, error: '' })
+        return
+      }
+
+      const requestId = ++this.routeRequestId
+      this.$emit('commute-route', { loading: true, transit: null, walk: null, error: '' })
+
+      const origin = { lat: housing.lat, lng: housing.lng, name: housing.name }
+      const destination = { lat: dest.lat, lng: dest.lng, name: dest.name }
+
+      const [transitResult, walkResult] = await Promise.allSettled([
+        fetchTransitRoute(origin, destination),
+        fetchWalkRoute(origin, destination)
+      ])
+
+      if (requestId !== this.routeRequestId) return // 오래된 요청 결과는 무시(경합 방지)
+
+      const transit = transitResult.status === 'fulfilled' ? transitResult.value : null
+      const walk = walkResult.status === 'fulfilled' ? walkResult.value : null
+      // 실패 사유는 콘솔에 남기고, 사용자에게는 둘 중 하나라도 있으면 그걸 보여줌
+      const error = transitResult.reason?.message || walkResult.reason?.message || ''
+      if (transitResult.status === 'rejected') console.error('[통근 경로] 대중교통 조회 실패:', transitResult.reason)
+      if (walkResult.status === 'rejected') console.error('[통근 경로] 도보 조회 실패:', walkResult.reason)
+
+      const linePoints = transit?.points?.length ? transit.points : walk?.points
+      this.drawRoutePolyline(linePoints)
+      this.$emit('commute-route', { loading: false, transit, walk, error })
     }
   }
 }
@@ -552,6 +663,10 @@ export default {
   background: var(--bmc-link);
 }
 
+.map__legend .dot.dest {
+  background: #004ea2;
+}
+
 </style>
 
 <!-- CustomOverlay는 map 밖에 붙어 scoped가 적용되지 않음 → 전역 핀/시설 스타일 -->
@@ -571,7 +686,7 @@ export default {
 }
 
 .kakao-pin.is-dim {
-  opacity: 0.35;
+  opacity: 0.22;
 }
 
 .kakao-pin__score {
@@ -617,22 +732,56 @@ export default {
 .kakao-fac {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--bmc-link, #004ea2);
-  text-shadow: 0 0 3px #fff;
+  padding: 2px 7px 2px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #26343a;
   pointer-events: none;
 }
 
 .kakao-fac__dot {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: #004ea2;
-  opacity: 0.9;
+  background: var(--fac-color, #004ea2);
+  border: 1.5px solid #fff;
+  box-shadow: 0 0 0 1px var(--fac-color, #004ea2);
   flex-shrink: 0;
+}
+
+.kakao-dest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.kakao-dest__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #004ea2;
+  background: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.kakao-dest__pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50% 50% 50% 0;
+  background: #004ea2;
+  transform: rotate(-45deg);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 </style>

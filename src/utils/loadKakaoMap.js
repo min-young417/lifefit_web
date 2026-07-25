@@ -32,7 +32,7 @@ export function loadKakaoMap() {
     }
 
     const script = document.createElement('script')
-    script.src = `${SDK_URL}?autoload=false&appkey=${encodeURIComponent(appKey)}`
+    script.src = `${SDK_URL}?autoload=false&appkey=${encodeURIComponent(appKey)}&libraries=services`
     script.async = true
     script.dataset.kakaoMaps = 'true'
     script.onload = () => finish(resolve, reject)

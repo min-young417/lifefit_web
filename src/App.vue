@@ -32,14 +32,22 @@
           :housings="filteredResults"
           :prefs="activePrefs"
           :selected="selected"
+          :commute-destination="activePrefs.commuteDestination"
           @select="selectHousing"
           @query="onMapQuery"
+          @commute-route="onCommuteRoute"
+          @nearby-places="nearbyPlaces = $event"
         />
 
         <SelectedInsight
           class="workspace__insight"
           :housing="selected"
           :walk-minutes="activePrefs.walkMinutes"
+          :lifestyles="activePrefs.lifestyles"
+          :nearby-places="nearbyPlaces"
+          :commute-destination="activePrefs.commuteDestination"
+          :commute-route="commuteRoute"
+          :commute-route-loading="commuteRouteLoading"
           @open-report="openReport"
         />
       </div>
@@ -81,23 +89,20 @@ import RecommendList from './components/RecommendList.vue'
 import SelectedInsight from './components/SelectedInsight.vue'
 import AiReportDrawer from './components/AiReportDrawer.vue'
 import CompareBar from './components/CompareBar.vue'
-import { mockHousings } from './data/mockHousings'
+import { realHousings } from './data/realHousings'
 import { rankHousings } from './utils/matchScore'
 import { assets } from './assets/images'
 
 const initialPrefs = () => ({
   eligibility: ['youth'],
   types: [],
-  lifestyles: ['leisure', 'culture'],
-  infraWeights: { cafe: 80, gym: 70, culture: 50, mart: 40 },
+  lifestyles: ['cafe', 'transit'],
   districts: [],
   depositMax: 2000,
   areaMin: 20,
   areaMax: 60,
-  commuteHub: '',
-  commuteMinutes: 30,
-  commuteHubLabel: '',
-  walkMinutes: 10
+  commuteDestination: null,
+  walkMinutes: 15
 })
 
 export default {
@@ -127,7 +132,10 @@ export default {
       compareOpen: false,
       nameQuery: '',
       searchTimer: null,
-      showTop: false
+      showTop: false,
+      commuteRoute: null,
+      commuteRouteLoading: false,
+      nearbyPlaces: []
     }
   },
   watch: {
@@ -150,7 +158,7 @@ export default {
     },
     compareItems() {
       return this.compareIds
-        .map((id) => this.results.find((h) => h.id === id) || mockHousings.find((h) => h.id === id))
+        .map((id) => this.results.find((h) => h.id === id) || realHousings.find((h) => h.id === id))
         .filter(Boolean)
         .map((h) => {
           const scored = this.results.find((r) => r.id === h.id)
@@ -166,13 +174,13 @@ export default {
       }
     },
     onSearch(prefs) {
-      this.activePrefs = { ...prefs, infraWeights: { ...prefs.infraWeights } }
+      this.activePrefs = { ...prefs }
       this.loading = true
       this.searched = true
       this.selected = null
       clearTimeout(this.searchTimer)
       this.searchTimer = setTimeout(() => {
-        this.results = rankHousings(mockHousings, this.activePrefs)
+        this.results = rankHousings(realHousings, this.activePrefs)
         this.loading = false
         if (this.results.length) {
           this.selected = this.results[0]
@@ -188,6 +196,10 @@ export default {
     },
     onMapQuery(q) {
       this.nameQuery = q
+    },
+    onCommuteRoute({ loading, transit, walk, error }) {
+      this.commuteRouteLoading = loading
+      if (!loading) this.commuteRoute = { transit, walk, error }
     },
     toggleCompare(housing) {
       const idx = this.compareIds.indexOf(housing.id)
