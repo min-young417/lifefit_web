@@ -8,11 +8,15 @@ import { loadKakaoMap } from './loadKakaoMap'
 /** 태그 → 카카오 카테고리 그룹코드 또는 키워드. 카테고리 코드가 없는 업종은 키워드 검색으로 대체 */
 const TAG_SEARCH = {
   cafe: { type: 'category', code: 'CE7' },
+  hotplace: { type: 'keyword', q: '핫플레이스' },
   gym: { type: 'keyword', q: '헬스장' },
+  pilates: { type: 'keyword', q: '필라테스' },
   culture: { type: 'category', code: 'CT1' },
   convenience: { type: 'category', code: 'CS2' },
+  daiso: { type: 'keyword', q: '다이소' },
   mart: { type: 'category', code: 'MT1' },
   hospital: { type: 'category', code: 'HP8' },
+  pharmacy: { type: 'category', code: 'PM9' },
   market: { type: 'keyword', q: '전통시장' },
   transit: { type: 'category', code: 'SW8' },
   childcare: { type: 'category', code: 'PS3' },
@@ -23,11 +27,15 @@ const TAG_SEARCH = {
 /** 태그별 지도 마커 색상 (주택 핀 색상과 겹치지 않게) */
 export const TAG_COLORS = {
   cafe: '#8B5E3C',
+  hotplace: '#C2410C',
   gym: '#E23E57',
+  pilates: '#BE185D',
   culture: '#7B61FF',
   convenience: '#FF8A00',
+  daiso: '#F59E0B',
   mart: '#2E86DE',
   hospital: '#EE4266',
+  pharmacy: '#15803D',
   market: '#2E9E4F',
   transit: '#1B4965',
   childcare: '#00B8A9',

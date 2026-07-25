@@ -1,4 +1,4 @@
-/** 부산 공공임대주택 실제 데이터 50건 — 이름/주소/보증금/면적/자격/준공연도는 공공데이터 CSV 기반(일부는 지역 특성으로 추정), 인프라 점수·주변시설·서술형 텍스트는 지역 특성 기반으로 추정 생성됨. competitionRate/competitionDate는 임의 추정치. lat/lng은 addr을 카카오 지오코더로 실제 변환한 값(1회성 배치 처리, 앱 실행 시 재계산 안 함) */
+/** 부산 공공임대주택 실제 데이터 50건 — 이름/주소/보증금/면적/자격/준공연도는 공공데이터 CSV 기반(일부는 지역 특성으로 추정), 인프라 점수·주변시설·서술형 텍스트는 지역 특성 기반으로 추정 생성됨. competitionRate/competitionDate는 임의 추정치. 매입임대는 CSV상 건물명이 실제로 존재하는 항목만 선별함. lat/lng은 addr을 카카오 지오코더로 실제 변환한 값(1회성 배치 처리) */
 
 export const realHousings = [
   {
@@ -39,7 +39,11 @@ export const realHousings = [
       "market": 84,
       "childcare": 71,
       "bank": 71,
-      "parking": 48
+      "parking": 48,
+      "hotplace": 75,
+      "pilates": 64,
+      "daiso": 72,
+      "pharmacy": 59
     },
     "nearby": [
       {
@@ -131,7 +135,11 @@ export const realHousings = [
       "market": 58,
       "childcare": 79,
       "bank": 68,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 71,
+      "pilates": 46,
+      "daiso": 71,
+      "pharmacy": 64
     },
     "nearby": [
       {
@@ -225,7 +233,11 @@ export const realHousings = [
       "market": 58,
       "childcare": 71,
       "bank": 91,
-      "parking": 67
+      "parking": 67,
+      "hotplace": 69,
+      "pilates": 56,
+      "daiso": 84,
+      "pharmacy": 67
     },
     "nearby": [
       {
@@ -316,7 +328,11 @@ export const realHousings = [
       "market": 48,
       "childcare": 81,
       "bank": 90,
-      "parking": 73
+      "parking": 73,
+      "hotplace": 61,
+      "pilates": 58,
+      "daiso": 87,
+      "pharmacy": 66
     },
     "nearby": [
       {
@@ -410,7 +426,11 @@ export const realHousings = [
       "market": 68,
       "childcare": 69,
       "bank": 69,
-      "parking": 62
+      "parking": 62,
+      "hotplace": 63,
+      "pilates": 44,
+      "daiso": 67,
+      "pharmacy": 49
     },
     "nearby": [
       {
@@ -502,7 +522,11 @@ export const realHousings = [
       "market": 54,
       "childcare": 71,
       "bank": 46,
-      "parking": 80
+      "parking": 80,
+      "hotplace": 66,
+      "pilates": 48,
+      "daiso": 55,
+      "pharmacy": 38
     },
     "nearby": [
       {
@@ -595,7 +619,11 @@ export const realHousings = [
       "market": 68,
       "childcare": 67,
       "bank": 67,
-      "parking": 60
+      "parking": 60,
+      "hotplace": 82,
+      "pilates": 58,
+      "daiso": 61,
+      "pharmacy": 54
     },
     "nearby": [
       {
@@ -685,7 +713,11 @@ export const realHousings = [
       "market": 55,
       "childcare": 90,
       "bank": 72,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 78,
+      "pilates": 67,
+      "daiso": 89,
+      "pharmacy": 62
     },
     "nearby": [
       {
@@ -776,7 +808,11 @@ export const realHousings = [
       "market": 53,
       "childcare": 72,
       "bank": 56,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 76,
+      "pilates": 48,
+      "daiso": 62,
+      "pharmacy": 55
     },
     "nearby": [
       {
@@ -866,7 +902,11 @@ export const realHousings = [
       "market": 62,
       "childcare": 83,
       "bank": 69,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 82,
+      "pilates": 73,
+      "daiso": 76,
+      "pharmacy": 61
     },
     "nearby": [
       {
@@ -957,7 +997,11 @@ export const realHousings = [
       "market": 50,
       "childcare": 94,
       "bank": 78,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 97,
+      "pilates": 69,
+      "daiso": 85,
+      "pharmacy": 67
     },
     "nearby": [
       {
@@ -1046,7 +1090,11 @@ export const realHousings = [
       "market": 49,
       "childcare": 85,
       "bank": 65,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 90,
+      "pilates": 53,
+      "daiso": 82,
+      "pharmacy": 61
     },
     "nearby": [
       {
@@ -1137,7 +1185,11 @@ export const realHousings = [
       "market": 70,
       "childcare": 81,
       "bank": 82,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 64,
+      "pilates": 46,
+      "daiso": 80,
+      "pharmacy": 74
     },
     "nearby": [
       {
@@ -1226,7 +1278,11 @@ export const realHousings = [
       "market": 52,
       "childcare": 64,
       "bank": 69,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 79,
+      "pilates": 55,
+      "daiso": 71,
+      "pharmacy": 50
     },
     "nearby": [
       {
@@ -1317,7 +1373,11 @@ export const realHousings = [
       "market": 75,
       "childcare": 52,
       "bank": 63,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 52,
+      "pilates": 43,
+      "daiso": 51,
+      "pharmacy": 48
     },
     "nearby": [
       {
@@ -1406,7 +1466,11 @@ export const realHousings = [
       "market": 73,
       "childcare": 66,
       "bank": 72,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 67,
+      "pilates": 55,
+      "daiso": 62,
+      "pharmacy": 65
     },
     "nearby": [
       {
@@ -1497,7 +1561,11 @@ export const realHousings = [
       "market": 78,
       "childcare": 82,
       "bank": 62,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 56,
+      "pilates": 40,
+      "daiso": 76,
+      "pharmacy": 63
     },
     "nearby": [
       {
@@ -1587,7 +1655,11 @@ export const realHousings = [
       "market": 86,
       "childcare": 70,
       "bank": 77,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 67,
+      "pilates": 54,
+      "daiso": 80,
+      "pharmacy": 74
     },
     "nearby": [
       {
@@ -1679,7 +1751,11 @@ export const realHousings = [
       "market": 49,
       "childcare": 83,
       "bank": 73,
-      "parking": 99
+      "parking": 99,
+      "hotplace": 80,
+      "pilates": 57,
+      "daiso": 72,
+      "pharmacy": 64
     },
     "nearby": [
       {
@@ -1768,7 +1844,11 @@ export const realHousings = [
       "market": 64,
       "childcare": 53,
       "bank": 48,
-      "parking": 38
+      "parking": 38,
+      "hotplace": 72,
+      "pilates": 36,
+      "daiso": 53,
+      "pharmacy": 36
     },
     "nearby": [
       {
@@ -1860,7 +1940,11 @@ export const realHousings = [
       "market": 69,
       "childcare": 61,
       "bank": 52,
-      "parking": 18
+      "parking": 18,
+      "hotplace": 48,
+      "pilates": 37,
+      "daiso": 46,
+      "pharmacy": 36
     },
     "nearby": [
       {
@@ -1950,7 +2034,11 @@ export const realHousings = [
       "market": 68,
       "childcare": 61,
       "bank": 50,
-      "parking": 38
+      "parking": 38,
+      "hotplace": 53,
+      "pilates": 44,
+      "daiso": 65,
+      "pharmacy": 56
     },
     "nearby": [
       {
@@ -2042,7 +2130,11 @@ export const realHousings = [
       "market": 80,
       "childcare": 73,
       "bank": 91,
-      "parking": 36
+      "parking": 36,
+      "hotplace": 69,
+      "pilates": 42,
+      "daiso": 78,
+      "pharmacy": 71
     },
     "nearby": [
       {
@@ -2130,7 +2222,11 @@ export const realHousings = [
       "market": 88,
       "childcare": 67,
       "bank": 83,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 75,
+      "pilates": 44,
+      "daiso": 80,
+      "pharmacy": 82
     },
     "nearby": [
       {
@@ -2221,7 +2317,11 @@ export const realHousings = [
       "market": 91,
       "childcare": 53,
       "bank": 69,
-      "parking": 30
+      "parking": 30,
+      "hotplace": 68,
+      "pilates": 56,
+      "daiso": 64,
+      "pharmacy": 64
     },
     "nearby": [
       {
@@ -2311,7 +2411,11 @@ export const realHousings = [
       "market": 97,
       "childcare": 56,
       "bank": 74,
-      "parking": 42
+      "parking": 42,
+      "hotplace": 74,
+      "pilates": 56,
+      "daiso": 63,
+      "pharmacy": 69
     },
     "nearby": [
       {
@@ -2402,7 +2506,11 @@ export const realHousings = [
       "market": 89,
       "childcare": 68,
       "bank": 75,
-      "parking": 15
+      "parking": 15,
+      "hotplace": 69,
+      "pilates": 46,
+      "daiso": 73,
+      "pharmacy": 67
     },
     "nearby": [
       {
@@ -2491,7 +2599,11 @@ export const realHousings = [
       "market": 80,
       "childcare": 45,
       "bank": 66,
-      "parking": 27
+      "parking": 27,
+      "hotplace": 40,
+      "pilates": 34,
+      "daiso": 57,
+      "pharmacy": 53
     },
     "nearby": [
       {
@@ -2581,7 +2693,11 @@ export const realHousings = [
       "market": 87,
       "childcare": 42,
       "bank": 78,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 64,
+      "pilates": 42,
+      "daiso": 61,
+      "pharmacy": 62
     },
     "nearby": [
       {
@@ -2671,7 +2787,11 @@ export const realHousings = [
       "market": 78,
       "childcare": 51,
       "bank": 78,
-      "parking": 22
+      "parking": 22,
+      "hotplace": 55,
+      "pilates": 45,
+      "daiso": 63,
+      "pharmacy": 71
     },
     "nearby": [
       {
@@ -2762,7 +2882,11 @@ export const realHousings = [
       "market": 90,
       "childcare": 70,
       "bank": 91,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 85,
+      "pilates": 71,
+      "daiso": 98,
+      "pharmacy": 63
     },
     "nearby": [
       {
@@ -2850,7 +2974,11 @@ export const realHousings = [
       "market": 76,
       "childcare": 76,
       "bank": 89,
-      "parking": 15
+      "parking": 15,
+      "hotplace": 76,
+      "pilates": 79,
+      "daiso": 92,
+      "pharmacy": 88
     },
     "nearby": [
       {
@@ -2942,7 +3070,11 @@ export const realHousings = [
       "market": 76,
       "childcare": 74,
       "bank": 98,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 75,
+      "pilates": 78,
+      "daiso": 93,
+      "pharmacy": 78
     },
     "nearby": [
       {
@@ -3031,7 +3163,11 @@ export const realHousings = [
       "market": 84,
       "childcare": 70,
       "bank": 66,
-      "parking": 41
+      "parking": 41,
+      "hotplace": 71,
+      "pilates": 62,
+      "daiso": 73,
+      "pharmacy": 70
     },
     "nearby": [
       {
@@ -3122,7 +3258,11 @@ export const realHousings = [
       "market": 60,
       "childcare": 62,
       "bank": 78,
-      "parking": 22
+      "parking": 22,
+      "hotplace": 74,
+      "pilates": 62,
+      "daiso": 68,
+      "pharmacy": 59
     },
     "nearby": [
       {
@@ -3211,7 +3351,11 @@ export const realHousings = [
       "market": 67,
       "childcare": 52,
       "bank": 73,
-      "parking": 15
+      "parking": 15,
+      "hotplace": 55,
+      "pilates": 56,
+      "daiso": 54,
+      "pharmacy": 57
     },
     "nearby": [
       {
@@ -3302,7 +3446,11 @@ export const realHousings = [
       "market": 53,
       "childcare": 75,
       "bank": 54,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 77,
+      "pilates": 42,
+      "daiso": 60,
+      "pharmacy": 60
     },
     "nearby": [
       {
@@ -3391,7 +3539,11 @@ export const realHousings = [
       "market": 70,
       "childcare": 71,
       "bank": 71,
-      "parking": 31
+      "parking": 31,
+      "hotplace": 47,
+      "pilates": 41,
+      "daiso": 81,
+      "pharmacy": 54
     },
     "nearby": [
       {
@@ -3481,7 +3633,11 @@ export const realHousings = [
       "market": 82,
       "childcare": 65,
       "bank": 86,
-      "parking": 19
+      "parking": 19,
+      "hotplace": 65,
+      "pilates": 65,
+      "daiso": 82,
+      "pharmacy": 78
     },
     "nearby": [
       {
@@ -3569,7 +3725,11 @@ export const realHousings = [
       "market": 85,
       "childcare": 73,
       "bank": 89,
-      "parking": 27
+      "parking": 27,
+      "hotplace": 65,
+      "pilates": 55,
+      "daiso": 85,
+      "pharmacy": 77
     },
     "nearby": [
       {
@@ -3659,7 +3819,11 @@ export const realHousings = [
       "market": 73,
       "childcare": 51,
       "bank": 70,
-      "parking": 27
+      "parking": 27,
+      "hotplace": 47,
+      "pilates": 54,
+      "daiso": 60,
+      "pharmacy": 54
     },
     "nearby": [
       {
@@ -3749,7 +3913,11 @@ export const realHousings = [
       "market": 83,
       "childcare": 69,
       "bank": 90,
-      "parking": 39
+      "parking": 39,
+      "hotplace": 75,
+      "pilates": 71,
+      "daiso": 82,
+      "pharmacy": 72
     },
     "nearby": [
       {
@@ -3840,7 +4008,11 @@ export const realHousings = [
       "market": 52,
       "childcare": 73,
       "bank": 68,
-      "parking": 23
+      "parking": 23,
+      "hotplace": 72,
+      "pilates": 63,
+      "daiso": 72,
+      "pharmacy": 64
     },
     "nearby": [
       {
@@ -3930,7 +4102,11 @@ export const realHousings = [
       "market": 72,
       "childcare": 74,
       "bank": 70,
-      "parking": 20
+      "parking": 20,
+      "hotplace": 72,
+      "pilates": 58,
+      "daiso": 66,
+      "pharmacy": 47
     },
     "nearby": [
       {
@@ -4022,7 +4198,11 @@ export const realHousings = [
       "market": 73,
       "childcare": 57,
       "bank": 63,
-      "parking": 16
+      "parking": 16,
+      "hotplace": 74,
+      "pilates": 58,
+      "daiso": 54,
+      "pharmacy": 58
     },
     "nearby": [
       {
@@ -4112,7 +4292,11 @@ export const realHousings = [
       "market": 45,
       "childcare": 81,
       "bank": 73,
-      "parking": 20
+      "parking": 20,
+      "hotplace": 85,
+      "pilates": 81,
+      "daiso": 94,
+      "pharmacy": 76
     },
     "nearby": [
       {
@@ -4203,7 +4387,11 @@ export const realHousings = [
       "market": 52,
       "childcare": 68,
       "bank": 72,
-      "parking": 15
+      "parking": 15,
+      "hotplace": 99,
+      "pilates": 75,
+      "daiso": 63,
+      "pharmacy": 65
     },
     "nearby": [
       {
@@ -4293,7 +4481,11 @@ export const realHousings = [
       "market": 67,
       "childcare": 75,
       "bank": 85,
-      "parking": 34
+      "parking": 34,
+      "hotplace": 45,
+      "pilates": 52,
+      "daiso": 84,
+      "pharmacy": 71
     },
     "nearby": [
       {
@@ -4385,7 +4577,11 @@ export const realHousings = [
       "market": 69,
       "childcare": 74,
       "bank": 69,
-      "parking": 18
+      "parking": 18,
+      "hotplace": 68,
+      "pilates": 40,
+      "daiso": 75,
+      "pharmacy": 63
     },
     "nearby": [
       {
@@ -4474,7 +4670,11 @@ export const realHousings = [
       "market": 69,
       "childcare": 71,
       "bank": 75,
-      "parking": 16
+      "parking": 16,
+      "hotplace": 55,
+      "pilates": 39,
+      "daiso": 65,
+      "pharmacy": 55
     },
     "nearby": [
       {

@@ -7,12 +7,16 @@ export const DISTRICTS = [
 ]
 
 export const LIFESTYLE_TAGS = [
-  { id: 'cafe', label: '카페·핫플' },
-  { id: 'gym', label: '헬스장·필라테스' },
+  { id: 'cafe', label: '카페' },
+  { id: 'hotplace', label: '핫플레이스' },
+  { id: 'gym', label: '헬스장' },
+  { id: 'pilates', label: '필라테스' },
   { id: 'culture', label: '문화·전시 공간' },
-  { id: 'convenience', label: '편의점·다이소' },
+  { id: 'convenience', label: '편의점' },
+  { id: 'daiso', label: '다이소' },
   { id: 'mart', label: '대형마트 근접' },
-  { id: 'hospital', label: '병원·약국 근접' },
+  { id: 'hospital', label: '병원' },
+  { id: 'pharmacy', label: '약국' },
   { id: 'market', label: '전통시장 근접' },
   { id: 'parking', label: '주차 여유' },
   { id: 'transit', label: '대중교통 접근성' },

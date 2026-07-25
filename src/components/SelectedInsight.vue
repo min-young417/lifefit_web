@@ -131,8 +131,9 @@ const FALLBACK_PRIORITY = [
 ]
 
 const SHORT_LABEL = {
-  cafe: '카페', gym: '헬스', culture: '문화', convenience: '편의점', mart: '마트',
-  hospital: '병원', market: '시장', parking: '주차', transit: '교통', childcare: '육아', bank: '은행',
+  cafe: '카페', hotplace: '핫플', gym: '헬스', pilates: '필라테스', culture: '문화',
+  convenience: '편의점', daiso: '다이소', mart: '마트', hospital: '병원', pharmacy: '약국',
+  market: '시장', parking: '주차', transit: '교통', childcare: '육아', bank: '은행',
   lowCompetition: '경쟁률'
 }
 
