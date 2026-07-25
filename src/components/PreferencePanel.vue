@@ -188,13 +188,13 @@ import { walkMinutesToMeters } from '../utils/walkRadius'
 import { loadKakaoMap } from '../utils/loadKakaoMap'
 
 const defaultPrefs = () => ({
-  eligibility: ['youth'],
+  eligibility: [],
   types: [],
-  lifestyles: ['cafe', 'transit'],
+  lifestyles: [],
   districts: [],
-  depositMax: 2000,
-  areaMin: 20,
-  areaMax: 60,
+  depositMax: 5000,
+  areaMin: 0,
+  areaMax: 120,
   commuteDestination: null,
   walkMinutes: 15
 })
@@ -433,9 +433,12 @@ export default {
   min-width: 340px;
 }
 
-.filter-dd__panel--budget,
-.filter-dd__panel--commute {
+.filter-dd__panel--budget {
   min-width: 280px;
+}
+
+.filter-dd__panel--commute {
+  min-width: 320px;
 }
 
 .filter-bar__applied {
@@ -595,11 +598,16 @@ export default {
 
 .commute-search {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .commute-search input {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   height: 38px;
   padding: 0 10px;
   border: 1px solid var(--bmc-border);
@@ -609,9 +617,12 @@ export default {
 }
 
 .commute-search .bmc-btn {
+  flex: 0 0 auto;
   min-height: 38px;
+  height: 38px;
   padding: 0 14px;
   font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .commute-results {

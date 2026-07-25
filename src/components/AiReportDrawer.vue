@@ -328,20 +328,23 @@ export default {
   border-radius: 50%;
   border: 4px solid var(--bmc-primary);
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-  gap: 1px;
   background: #fff;
   flex-shrink: 0;
 }
 
 .ring strong {
   font-size: 1.4rem;
+  line-height: 1;
   color: var(--bmc-primary);
 }
 
 .ring span {
   font-size: 0.72rem;
+  line-height: 1;
+  margin-left: 1px;
+  align-self: center;
   color: var(--bmc-text-muted);
 }
 

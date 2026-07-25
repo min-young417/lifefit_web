@@ -1,4 +1,4 @@
-/** 부산 공공임대주택 실제 데이터 50건 — 이름/주소/보증금/면적/자격/준공연도는 공공데이터 CSV 기반(일부는 지역 특성으로 추정), 인프라 점수·주변시설·서술형 텍스트는 지역 특성 기반으로 추정 생성됨. competitionRate/competitionDate는 임의 추정치. 매입임대는 CSV상 건물명이 실제로 존재하는 항목만 선별함 */
+/** 부산 공공임대주택 실제 데이터 50건 — 이름/주소/보증금/면적/자격/준공연도는 공공데이터 CSV 기반(일부는 지역 특성으로 추정), 인프라 점수·주변시설·서술형 텍스트는 지역 특성 기반으로 추정 생성됨. competitionRate/competitionDate는 임의 추정치. lat/lng은 addr을 카카오 지오코더로 실제 변환한 값(1회성 배치 처리, 앱 실행 시 재계산 안 함) */
 
 export const realHousings = [
   {
@@ -18,12 +18,13 @@ export const realHousings = [
     "areaMax": 36.7,
     "status": "open",
     "builtYear": 2019,
-    "lat": 35.196408,
-    "lng": 129.094172,
+    "lat": 35.195941,
+    "lng": 129.094174,
     "imageHue": 186,
     "lifestyleTags": [
-      "culture",
-      "transit"
+      "mart",
+      "transit",
+      "culture"
     ],
     "summary": "동래구 온천장·전통 문화형",
     "infra": {
@@ -69,15 +70,15 @@ export const realHousings = [
     ],
     "highlights": [
       "동래구 생활권",
-      "culture·transit 인프라",
+      "대형마트·대중교통·문화공간 인프라 우수",
       "395세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 20,
-      "seomyeon": 22,
-      "haeundae": 27,
-      "nampo": 38,
-      "pnu": 20
+      "centum": 22,
+      "seomyeon": 23,
+      "haeundae": 28,
+      "nampo": 39,
+      "pnu": 19
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -89,7 +90,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "동래구 일대의 전형적인 \"온천장·전통 문화형\" 생활 리듬을 따릅니다.",
-    "households": 395
+    "households": 395,
+    "addr": "부산광역시 동래구 반송로 164"
   },
   {
     "id": "r2",
@@ -108,12 +110,13 @@ export const realHousings = [
     "areaMax": 44.1,
     "status": "open",
     "builtYear": 2022,
-    "lat": 35.1264,
-    "lng": 129.0953,
+    "lat": 35.124306,
+    "lng": 129.114996,
     "imageHue": 175,
     "lifestyleTags": [
       "nature",
-      "leisure"
+      "cafe",
+      "culture"
     ],
     "summary": "남구 이기대·경성대 문화형",
     "infra": {
@@ -159,15 +162,15 @@ export const realHousings = [
     ],
     "highlights": [
       "남구 생활권",
-      "nature·leisure 인프라",
+      "자연·공원·카페·문화공간 인프라 우수",
       "68세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 23,
-      "seomyeon": 21,
-      "haeundae": 26,
-      "nampo": 25,
-      "pnu": 38
+      "centum": 22,
+      "seomyeon": 20,
+      "haeundae": 25,
+      "nampo": 26,
+      "pnu": 36
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -181,7 +184,8 @@ export const realHousings = [
     "similarEnv": "남구 일대의 전형적인 \"이기대·경성대 문화형\" 생활 리듬을 따릅니다.",
     "households": 68,
     "competitionRate": 1.8,
-    "competitionDate": "2026-02"
+    "competitionDate": "2026-02",
+    "addr": "부산광역시 남구 이기대공원로 18(용호동)"
   },
   {
     "id": "r3",
@@ -200,13 +204,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2025,
-    "lat": 35.179792,
-    "lng": 129.088928,
+    "lat": 35.17971,
+    "lng": 129.078024,
     "imageHue": 168,
     "lifestyleTags": [
       "transit",
-      "shopping",
-      "startup"
+      "cafe",
+      "mart"
     ],
     "summary": "연제구 시청·행정 중심 균형형",
     "infra": {
@@ -252,13 +256,13 @@ export const realHousings = [
     ],
     "highlights": [
       "연제구 생활권",
-      "transit·shopping·startup 인프라",
+      "대중교통·카페·대형마트 인프라 우수",
       "692세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 19,
+      "centum": 20,
       "seomyeon": 18,
-      "haeundae": 26,
+      "haeundae": 27,
       "nampo": 34,
       "pnu": 24
     },
@@ -271,7 +275,8 @@ export const realHousings = [
       "평일 야간 유동인구가 적은 편"
     ],
     "similarEnv": "연제구 일대의 전형적인 \"시청·행정 중심 균형형\" 생활 리듬을 따릅니다.",
-    "households": 692
+    "households": 692,
+    "addr": "부산광역시 연제구 연제로42번길 46(연산동,시청앞 행복주택 1단지)"
   },
   {
     "id": "r4",
@@ -290,13 +295,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2023,
-    "lat": 35.1703,
-    "lng": 129.090836,
+    "lat": 35.179254,
+    "lng": 129.078446,
     "imageHue": 214,
     "lifestyleTags": [
       "transit",
-      "shopping",
-      "startup"
+      "mart",
+      "gym"
     ],
     "summary": "연제구 시청·행정 중심 균형형",
     "infra": {
@@ -342,15 +347,15 @@ export const realHousings = [
     ],
     "highlights": [
       "연제구 생활권",
-      "transit·shopping·startup 인프라",
+      "대중교통·대형마트·헬스장 인프라 우수",
       "1108세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 18,
+      "centum": 20,
       "seomyeon": 17,
-      "haeundae": 25,
-      "nampo": 32,
-      "pnu": 26
+      "haeundae": 26,
+      "nampo": 33,
+      "pnu": 25
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -364,7 +369,8 @@ export const realHousings = [
     "similarEnv": "연제구 일대의 전형적인 \"시청·행정 중심 균형형\" 생활 리듬을 따릅니다.",
     "households": 1108,
     "competitionRate": 5.5,
-    "competitionDate": "2025-08"
+    "competitionDate": "2025-08",
+    "addr": "부산광역시 연제구 중앙대로1038번길 40(연산동,시청앞 행복주택 2단지)"
   },
   {
     "id": "r5",
@@ -383,12 +389,13 @@ export const realHousings = [
     "areaMax": 60.0,
     "status": "open",
     "builtYear": 2023,
-    "lat": 35.096768,
-    "lng": 129.016644,
+    "lat": 35.101168,
+    "lng": 129.011025,
     "imageHue": 191,
     "lifestyleTags": [
-      "culture",
-      "transit"
+      "mart",
+      "transit",
+      "cafe"
     ],
     "summary": "서구 원도심 산복도로·병원 인접형",
     "infra": {
@@ -434,14 +441,14 @@ export const realHousings = [
     ],
     "highlights": [
       "서구 생활권",
-      "culture·transit 인프라",
+      "대형마트·대중교통·카페 인프라 우수",
       "767세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 40,
-      "seomyeon": 28,
-      "haeundae": 44,
-      "nampo": 13,
+      "centum": 39,
+      "seomyeon": 27,
+      "haeundae": 43,
+      "nampo": 12,
       "pnu": 47
     },
     "pros": [
@@ -454,7 +461,8 @@ export const realHousings = [
       "경사·계단이 있어 이동에 다소 불편할 수 있음"
     ],
     "similarEnv": "서구 일대의 전형적인 \"원도심 산복도로·병원 인접형\" 생활 리듬을 따릅니다.",
-    "households": 767
+    "households": 767,
+    "addr": "부산광역시 서구 옥천로173번길 29(아미동2가,경동 포레스트힐)"
   },
   {
     "id": "r6",
@@ -473,13 +481,13 @@ export const realHousings = [
     "areaMax": 59.8,
     "status": "open",
     "builtYear": 2023,
-    "lat": 35.255292,
-    "lng": 129.230916,
+    "lat": 35.260795,
+    "lng": 129.224006,
     "imageHue": 187,
     "lifestyleTags": [
       "nature",
-      "leisure",
-      "startup"
+      "cafe",
+      "gym"
     ],
     "summary": "기장군 일광 해변 신도시 워케이션형",
     "infra": {
@@ -525,15 +533,15 @@ export const realHousings = [
     ],
     "highlights": [
       "기장군 생활권",
-      "nature·leisure·startup 인프라",
+      "자연·공원·카페·헬스장 인프라 우수",
       "999세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 40,
-      "seomyeon": 54,
-      "haeundae": 39,
-      "nampo": 68,
-      "pnu": 42
+      "centum": 35,
+      "seomyeon": 49,
+      "haeundae": 34,
+      "nampo": 63,
+      "pnu": 37
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -546,7 +554,8 @@ export const realHousings = [
     "similarEnv": "기장군 일대의 전형적인 \"일광 해변 신도시 워케이션형\" 생활 리듬을 따릅니다.",
     "households": 999,
     "competitionRate": 1.6,
-    "competitionDate": "2025-11"
+    "competitionDate": "2025-11",
+    "addr": "부산광역시 기장군 일광읍 해빛1로 61"
   },
   {
     "id": "r7",
@@ -565,12 +574,13 @@ export const realHousings = [
     "areaMax": 60.0,
     "status": "soon",
     "builtYear": 2023,
-    "lat": 35.249348,
-    "lng": 129.095948,
+    "lat": 35.220394,
+    "lng": 129.111307,
     "imageHue": 210,
     "lifestyleTags": [
       "culture",
-      "nature"
+      "nature",
+      "cafe"
     ],
     "summary": "금정구 부산대 캠퍼스·산책형",
     "infra": {
@@ -616,15 +626,15 @@ export const realHousings = [
     ],
     "highlights": [
       "금정구 생활권",
-      "culture·nature 인프라",
+      "문화공간·자연·공원·카페 인프라 우수",
       "42세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 32,
-      "seomyeon": 35,
-      "haeundae": 37,
-      "nampo": 51,
-      "pnu": 15
+      "centum": 30,
+      "seomyeon": 32,
+      "haeundae": 35,
+      "nampo": 48,
+      "pnu": 13
     },
     "pros": [
       "도서관·문화시설이 가까움",
@@ -636,7 +646,8 @@ export const realHousings = [
       "초행길엔 골목이 헷갈릴 수 있음"
     ],
     "similarEnv": "금정구 일대의 전형적인 \"부산대 캠퍼스·산책형\" 생활 리듬을 따릅니다.",
-    "households": 42
+    "households": 42,
+    "addr": "부산광역시 금정구 금사로85번길 2(금사동,금사어울림센터)"
   },
   {
     "id": "r8",
@@ -653,13 +664,13 @@ export const realHousings = [
     "areaMax": 37.4,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.172612,
-    "lng": 129.166408,
+    "lat": 35.164947,
+    "lng": 129.142965,
     "imageHue": 178,
     "lifestyleTags": [
-      "leisure",
-      "shopping",
-      "culture"
+      "cafe",
+      "nature",
+      "mart"
     ],
     "summary": "해운대구 해변·관광 인프라 최상급형",
     "infra": {
@@ -705,15 +716,15 @@ export const realHousings = [
     ],
     "highlights": [
       "해운대구 생활권",
-      "leisure·shopping·culture 인프라",
+      "카페·자연·공원·대형마트 인프라 우수",
       "50세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 17,
-      "seomyeon": 33,
-      "haeundae": 14,
-      "nampo": 44,
-      "pnu": 34
+      "centum": 12,
+      "seomyeon": 27,
+      "haeundae": 17,
+      "nampo": 40,
+      "pnu": 29
     },
     "pros": [
       "카페·베이커리 밀집도가 높아 일상 동선이 편함",
@@ -727,7 +738,8 @@ export const realHousings = [
     "similarEnv": "해운대구 일대의 전형적인 \"해변·관광 인프라 최상급형\" 생활 리듬을 따릅니다.",
     "households": 50,
     "competitionRate": 8.6,
-    "competitionDate": "2026-01"
+    "competitionDate": "2026-01",
+    "addr": "부산광역시 해운대구 해운대로 435"
   },
   {
     "id": "r9",
@@ -743,13 +755,13 @@ export const realHousings = [
     "areaMax": 60.0,
     "status": "open",
     "builtYear": 2025,
-    "lat": 35.253732,
-    "lng": 129.217956,
+    "lat": 35.270366,
+    "lng": 129.223138,
     "imageHue": 208,
     "lifestyleTags": [
       "nature",
-      "leisure",
-      "startup"
+      "cafe",
+      "gym"
     ],
     "summary": "기장군 일광 해변 신도시 워케이션형",
     "infra": {
@@ -795,15 +807,15 @@ export const realHousings = [
     ],
     "highlights": [
       "기장군 생활권",
-      "nature·leisure·startup 인프라",
+      "자연·공원·카페·헬스장 인프라 우수",
       "1134세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 38,
-      "seomyeon": 51,
-      "haeundae": 37,
-      "nampo": 66,
-      "pnu": 39
+      "centum": 34,
+      "seomyeon": 47,
+      "haeundae": 34,
+      "nampo": 62,
+      "pnu": 36
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -815,7 +827,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "기장군 일대의 전형적인 \"일광 해변 신도시 워케이션형\" 생활 리듬을 따릅니다.",
-    "households": 1134
+    "households": 1134,
+    "addr": "부산광역시 기장군 일광읍 해빛4로 20"
   },
   {
     "id": "r10",
@@ -832,13 +845,13 @@ export const realHousings = [
     "areaMax": 39.6,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.153976,
-    "lng": 129.123128,
+    "lat": 35.166513,
+    "lng": 129.122039,
     "imageHue": 185,
     "lifestyleTags": [
-      "leisure",
-      "culture",
-      "nature"
+      "gym",
+      "nature",
+      "culture"
     ],
     "summary": "수영구 광안리·민락 카페거리형",
     "infra": {
@@ -884,15 +897,15 @@ export const realHousings = [
     ],
     "highlights": [
       "수영구 생활권",
-      "leisure·culture·nature 인프라",
+      "헬스장·자연·공원·문화공간 인프라 우수",
       "86세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 14,
-      "seomyeon": 23,
-      "haeundae": 18,
-      "nampo": 34,
-      "pnu": 32
+      "centum": 16,
+      "seomyeon": 21,
+      "haeundae": 20,
+      "nampo": 32,
+      "pnu": 31
     },
     "pros": [
       "헬스장·운동시설 접근성이 좋음",
@@ -906,7 +919,8 @@ export const realHousings = [
     "similarEnv": "수영구 일대의 전형적인 \"광안리·민락 카페거리형\" 생활 리듬을 따릅니다.",
     "households": 86,
     "competitionRate": 3.7,
-    "competitionDate": "2026-07"
+    "competitionDate": "2026-07",
+    "addr": "부산광역시 수영구 수영로 776"
   },
   {
     "id": "r11",
@@ -922,13 +936,13 @@ export const realHousings = [
     "areaMax": 53.1,
     "status": "closed",
     "builtYear": 2014,
-    "lat": 35.164488,
-    "lng": 129.168412,
+    "lat": 35.174777,
+    "lng": 129.140586,
     "imageHue": 222,
     "lifestyleTags": [
-      "leisure",
-      "shopping",
-      "culture"
+      "cafe",
+      "mart",
+      "nature"
     ],
     "summary": "해운대구 해변·관광 인프라 최상급형",
     "infra": {
@@ -974,15 +988,15 @@ export const realHousings = [
     ],
     "highlights": [
       "해운대구 생활권",
-      "leisure·shopping·culture 인프라",
+      "카페·대형마트·자연·공원 인프라 우수",
       "50세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 18,
-      "seomyeon": 33,
-      "haeundae": 12,
-      "nampo": 43,
-      "pnu": 35
+      "centum": 12,
+      "seomyeon": 27,
+      "haeundae": 16,
+      "nampo": 39,
+      "pnu": 30
     },
     "pros": [
       "카페·베이커리 밀집도가 높아 일상 동선이 편함",
@@ -994,7 +1008,8 @@ export const realHousings = [
       "주차 여건이 넉넉하지 않은 편"
     ],
     "similarEnv": "해운대구 일대의 전형적인 \"해변·관광 인프라 최상급형\" 생활 리듬을 따릅니다.",
-    "households": 50
+    "households": 50,
+    "addr": "부산광역시 해운대구 해운대로383번길 93"
   },
   {
     "id": "r12",
@@ -1010,12 +1025,12 @@ export const realHousings = [
     "areaMax": 45.9,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.169876,
-    "lng": 129.152884,
+    "lat": 35.164013,
+    "lng": 129.176737,
     "imageHue": 144,
     "lifestyleTags": [
-      "leisure",
-      "shopping",
+      "cafe",
+      "nature",
       "culture"
     ],
     "summary": "해운대구 해변·관광 인프라 최상급형",
@@ -1062,15 +1077,15 @@ export const realHousings = [
     ],
     "highlights": [
       "해운대구 생활권",
-      "leisure·shopping·culture 인프라",
+      "카페·자연·공원·문화공간 인프라 우수",
       "745세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 15,
-      "seomyeon": 30,
-      "haeundae": 13,
-      "nampo": 41,
-      "pnu": 32
+      "centum": 11,
+      "seomyeon": 26,
+      "haeundae": 17,
+      "nampo": 39,
+      "pnu": 28
     },
     "pros": [
       "카페·베이커리 밀집도가 높아 일상 동선이 편함",
@@ -1084,7 +1099,8 @@ export const realHousings = [
     "similarEnv": "해운대구 일대의 전형적인 \"해변·관광 인프라 최상급형\" 생활 리듬을 따릅니다.",
     "households": 745,
     "competitionRate": 5.1,
-    "competitionDate": "2025-11"
+    "competitionDate": "2025-11",
+    "addr": "부산광역시 해운대구 좌동순환로 402"
   },
   {
     "id": "r13",
@@ -1100,11 +1116,12 @@ export const realHousings = [
     "areaMax": 39.5,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.190548,
-    "lng": 129.007592,
+    "lat": 35.247118,
+    "lng": 129.013557,
     "imageHue": 158,
     "lifestyleTags": [
-      "shopping",
+      "mart",
+      "cafe",
       "nature"
     ],
     "summary": "북구 화명·구포 신도시 가족형",
@@ -1151,15 +1168,15 @@ export const realHousings = [
     ],
     "highlights": [
       "북구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·카페·자연·공원 인프라 우수",
       "51세대 규모"
     ],
     "commuteMinutes": {
       "centum": 36,
       "seomyeon": 24,
       "haeundae": 43,
-      "nampo": 34,
-      "pnu": 29
+      "nampo": 35,
+      "pnu": 28
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -1171,7 +1188,8 @@ export const realHousings = [
       "주차 여건이 넉넉하지 않은 편"
     ],
     "similarEnv": "북구 일대의 전형적인 \"화명·구포 신도시 가족형\" 생활 리듬을 따릅니다.",
-    "households": 51
+    "households": 51,
+    "addr": "부산광역시 북구 효열로 2"
   },
   {
     "id": "r14",
@@ -1187,12 +1205,13 @@ export const realHousings = [
     "areaMax": 39.8,
     "status": "soon",
     "builtYear": 2015,
-    "lat": 35.14044,
-    "lng": 129.11186,
+    "lat": 35.140937,
+    "lng": 129.099914,
     "imageHue": 209,
     "lifestyleTags": [
-      "nature",
-      "leisure"
+      "cafe",
+      "culture",
+      "nature"
     ],
     "summary": "남구 이기대·경성대 문화형",
     "infra": {
@@ -1238,15 +1257,15 @@ export const realHousings = [
     ],
     "highlights": [
       "남구 생활권",
-      "nature·leisure 인프라",
+      "카페·문화공간·자연·공원 인프라 우수",
       "50세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 18,
-      "seomyeon": 22,
-      "haeundae": 21,
-      "nampo": 30,
-      "pnu": 35
+      "centum": 20,
+      "seomyeon": 20,
+      "haeundae": 23,
+      "nampo": 28,
+      "pnu": 34
     },
     "pros": [
       "카페·베이커리 밀집도가 높아 일상 동선이 편함",
@@ -1260,7 +1279,8 @@ export const realHousings = [
     "similarEnv": "남구 일대의 전형적인 \"이기대·경성대 문화형\" 생활 리듬을 따릅니다.",
     "households": 50,
     "competitionRate": 1.8,
-    "competitionDate": "2026-03"
+    "competitionDate": "2026-03",
+    "addr": "부산광역시 남구 수영로325번길 61"
   },
   {
     "id": "r15",
@@ -1276,12 +1296,13 @@ export const realHousings = [
     "areaMax": 39.4,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.0924,
-    "lng": 129.019284,
+    "lat": 35.119908,
+    "lng": 129.013065,
     "imageHue": 184,
     "lifestyleTags": [
+      "transit",
       "culture",
-      "transit"
+      "mart"
     ],
     "summary": "서구 원도심 산복도로·병원 인접형",
     "infra": {
@@ -1327,15 +1348,15 @@ export const realHousings = [
     ],
     "highlights": [
       "서구 생활권",
-      "culture·transit 인프라",
+      "대중교통·문화공간·대형마트 인프라 우수",
       "30세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 41,
-      "seomyeon": 29,
-      "haeundae": 44,
-      "nampo": 13,
-      "pnu": 48
+      "centum": 39,
+      "seomyeon": 28,
+      "haeundae": 43,
+      "nampo": 12,
+      "pnu": 47
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -1347,7 +1368,8 @@ export const realHousings = [
       "평일 야간 유동인구가 적은 편"
     ],
     "similarEnv": "서구 일대의 전형적인 \"원도심 산복도로·병원 인접형\" 생활 리듬을 따릅니다.",
-    "households": 30
+    "households": 30,
+    "addr": "부산광역시 서구 보수대로 284"
   },
   {
     "id": "r16",
@@ -1363,12 +1385,13 @@ export const realHousings = [
     "areaMax": 39.8,
     "status": "open",
     "builtYear": 2012,
-    "lat": 35.246048,
-    "lng": 129.091832,
+    "lat": 35.230272,
+    "lng": 129.081911,
     "imageHue": 223,
     "lifestyleTags": [
+      "nature",
       "culture",
-      "nature"
+      "transit"
     ],
     "summary": "금정구 부산대 캠퍼스·산책형",
     "infra": {
@@ -1414,15 +1437,15 @@ export const realHousings = [
     ],
     "highlights": [
       "금정구 생활권",
-      "culture·nature 인프라",
+      "자연·공원·문화공간·대중교통 인프라 우수",
       "143세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 31,
-      "seomyeon": 34,
-      "haeundae": 37,
-      "nampo": 50,
-      "pnu": 14
+      "centum": 29,
+      "seomyeon": 31,
+      "haeundae": 35,
+      "nampo": 48,
+      "pnu": 12
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -1436,7 +1459,8 @@ export const realHousings = [
     "similarEnv": "금정구 일대의 전형적인 \"부산대 캠퍼스·산책형\" 생활 리듬을 따릅니다.",
     "households": 143,
     "competitionRate": 4.5,
-    "competitionDate": "2026-07"
+    "competitionDate": "2026-07",
+    "addr": "부산광역시 금정구 금강로 225"
   },
   {
     "id": "r17",
@@ -1452,12 +1476,13 @@ export const realHousings = [
     "areaMax": 49.3,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.106472,
-    "lng": 128.9834,
+    "lat": 35.105509,
+    "lng": 128.977088,
     "imageHue": 228,
     "lifestyleTags": [
-      "shopping",
-      "nature"
+      "mart",
+      "cafe",
+      "transit"
     ],
     "summary": "사하구 낙동강·하단 생활형",
     "infra": {
@@ -1503,15 +1528,15 @@ export const realHousings = [
     ],
     "highlights": [
       "사하구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·카페·대중교통 인프라 우수",
       "48세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 45,
-      "seomyeon": 31,
-      "haeundae": 49,
-      "nampo": 20,
-      "pnu": 48
+      "centum": 47,
+      "seomyeon": 32,
+      "haeundae": 51,
+      "nampo": 22,
+      "pnu": 49
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -1523,7 +1548,8 @@ export const realHousings = [
       "초행길엔 골목이 헷갈릴 수 있음"
     ],
     "similarEnv": "사하구 일대의 전형적인 \"낙동강·하단 생활형\" 생활 리듬을 따릅니다.",
-    "households": 48
+    "households": 48,
+    "addr": "부산광역시 사하구 승학로71번길 30"
   },
   {
     "id": "r18",
@@ -1540,12 +1566,13 @@ export const realHousings = [
     "areaMax": 34.8,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.19426,
-    "lng": 129.082244,
+    "lat": 35.205784,
+    "lng": 129.086477,
     "imageHue": 181,
     "lifestyleTags": [
-      "culture",
-      "transit"
+      "transit",
+      "mart",
+      "culture"
     ],
     "summary": "동래구 온천장·전통 문화형",
     "infra": {
@@ -1591,15 +1618,15 @@ export const realHousings = [
     ],
     "highlights": [
       "동래구 생활권",
-      "culture·transit 인프라",
+      "대중교통·대형마트·문화공간 인프라 우수",
       "124세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 22,
-      "seomyeon": 20,
+      "centum": 23,
+      "seomyeon": 22,
       "haeundae": 29,
-      "nampo": 37,
-      "pnu": 20
+      "nampo": 38,
+      "pnu": 19
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -1613,7 +1640,8 @@ export const realHousings = [
     "similarEnv": "동래구 일대의 전형적인 \"온천장·전통 문화형\" 생활 리듬을 따릅니다.",
     "households": 124,
     "competitionRate": 1.7,
-    "competitionDate": "2026-04"
+    "competitionDate": "2026-04",
+    "addr": "부산광역시 동래구 동래로 117"
   },
   {
     "id": "r19",
@@ -1630,12 +1658,12 @@ export const realHousings = [
     "areaMax": 33.4,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.156736,
-    "lng": 129.152116,
+    "lat": 35.178297,
+    "lng": 129.128405,
     "imageHue": 189,
     "lifestyleTags": [
-      "leisure",
-      "shopping",
+      "nature",
+      "cafe",
       "culture"
     ],
     "summary": "해운대구 해변·관광 인프라 최상급형",
@@ -1682,15 +1710,15 @@ export const realHousings = [
     ],
     "highlights": [
       "해운대구 생활권",
-      "leisure·shopping·culture 인프라",
+      "자연·공원·카페·문화공간 인프라 우수",
       "32세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 15,
-      "seomyeon": 29,
-      "haeundae": 12,
-      "nampo": 39,
-      "pnu": 35
+      "centum": 10,
+      "seomyeon": 25,
+      "haeundae": 17,
+      "nampo": 38,
+      "pnu": 29
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -1702,7 +1730,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "해운대구 일대의 전형적인 \"해변·관광 인프라 최상급형\" 생활 리듬을 따릅니다.",
-    "households": 32
+    "households": 32,
+    "addr": "부산광역시 해운대구 해운대로 253"
   },
   {
     "id": "r20",
@@ -1718,11 +1747,12 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2021,
-    "lat": 35.102724,
-    "lng": 129.070292,
+    "lat": 35.096072,
+    "lng": 129.055902,
     "imageHue": 159,
     "lifestyleTags": [
       "nature",
+      "cafe",
       "culture"
     ],
     "summary": "영도구 바닷가·감성카페 골목형",
@@ -1769,15 +1799,15 @@ export const realHousings = [
     ],
     "highlights": [
       "영도구 생활권",
-      "nature·culture 인프라",
+      "자연·공원·카페·문화공간 인프라 우수",
       "9세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 31,
-      "seomyeon": 24,
-      "haeundae": 34,
-      "nampo": 18,
-      "pnu": 44
+      "centum": 34,
+      "seomyeon": 27,
+      "haeundae": 36,
+      "nampo": 17,
+      "pnu": 47
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -1791,7 +1821,8 @@ export const realHousings = [
     "similarEnv": "영도구 일대의 전형적인 \"바닷가·감성카페 골목형\" 생활 리듬을 따릅니다.",
     "households": 9,
     "competitionRate": 2.3,
-    "competitionDate": "2025-12"
+    "competitionDate": "2025-12",
+    "addr": "부산광역시 영도구 태종로292번길 66-1"
   },
   {
     "id": "r21",
@@ -1808,12 +1839,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "soon",
     "builtYear": 2017,
-    "lat": 35.08824,
-    "lng": 129.065252,
+    "lat": 35.08564,
+    "lng": 129.069877,
     "imageHue": 215,
     "lifestyleTags": [
       "nature",
-      "culture"
+      "transit",
+      "cafe"
     ],
     "summary": "영도구 바닷가·감성카페 골목형",
     "infra": {
@@ -1859,7 +1891,7 @@ export const realHousings = [
     ],
     "highlights": [
       "영도구 생활권",
-      "nature·culture 인프라",
+      "자연·공원·대중교통·카페 인프라 우수",
       "1세대 규모"
     ],
     "commuteMinutes": {
@@ -1867,7 +1899,7 @@ export const realHousings = [
       "seomyeon": 28,
       "haeundae": 37,
       "nampo": 17,
-      "pnu": 47
+      "pnu": 48
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -1879,7 +1911,8 @@ export const realHousings = [
       "성수기엔 주변 소음·혼잡이 있을 수 있음"
     ],
     "similarEnv": "영도구 일대의 전형적인 \"바닷가·감성카페 골목형\" 생활 리듬을 따릅니다.",
-    "households": 1
+    "households": 1,
+    "addr": "부산광역시 영도구 상리로 1"
   },
   {
     "id": "r22",
@@ -1896,11 +1929,12 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "closed",
     "builtYear": 2023,
-    "lat": 35.091984,
-    "lng": 129.079148,
+    "lat": 35.088872,
+    "lng": 129.06085,
     "imageHue": 159,
     "lifestyleTags": [
       "nature",
+      "cafe",
       "culture"
     ],
     "summary": "영도구 바닷가·감성카페 골목형",
@@ -1947,15 +1981,15 @@ export const realHousings = [
     ],
     "highlights": [
       "영도구 생활권",
-      "nature·culture 인프라",
+      "자연·공원·카페·문화공간 인프라 우수",
       "14세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 33,
-      "seomyeon": 27,
-      "haeundae": 34,
-      "nampo": 20,
-      "pnu": 46
+      "centum": 35,
+      "seomyeon": 28,
+      "haeundae": 37,
+      "nampo": 18,
+      "pnu": 47
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -1969,7 +2003,8 @@ export const realHousings = [
     "similarEnv": "영도구 일대의 전형적인 \"바닷가·감성카페 골목형\" 생활 리듬을 따릅니다.",
     "households": 14,
     "competitionRate": 1.4,
-    "competitionDate": "2026-04"
+    "competitionDate": "2026-04",
+    "addr": "부산광역시 영도구 청학동로 4-1"
   },
   {
     "id": "r23",
@@ -1986,13 +2021,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2017,
-    "lat": 35.154452,
-    "lng": 128.9903,
+    "lat": 35.161052,
+    "lng": 128.986478,
     "imageHue": 203,
     "lifestyleTags": [
-      "startup",
       "transit",
-      "shopping"
+      "mart",
+      "cafe"
     ],
     "summary": "사상구 사상역 환승·산업단지형",
     "infra": {
@@ -2038,12 +2073,12 @@ export const realHousings = [
     ],
     "highlights": [
       "사상구 생활권",
-      "startup·transit·shopping 인프라",
+      "대중교통·대형마트·카페 인프라 우수",
       "7세대 규모"
     ],
     "commuteMinutes": {
       "centum": 40,
-      "seomyeon": 24,
+      "seomyeon": 25,
       "haeundae": 46,
       "nampo": 27,
       "pnu": 38
@@ -2057,7 +2092,8 @@ export const realHousings = [
       "초행길엔 골목이 헷갈릴 수 있음"
     ],
     "similarEnv": "사상구 일대의 전형적인 \"사상역 환승·산업단지형\" 생활 리듬을 따릅니다.",
-    "households": 7
+    "households": 7,
+    "addr": "부산광역시 사상구 광장로86번길 18"
   },
   {
     "id": "r24",
@@ -2073,13 +2109,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.097456,
-    "lng": 129.038848,
+    "lat": 35.102596,
+    "lng": 129.037247,
     "imageHue": 150,
     "lifestyleTags": [
-      "shopping",
-      "culture",
-      "transit"
+      "transit",
+      "cafe",
+      "culture"
     ],
     "summary": "중구 원도심·남포동 상권형",
     "infra": {
@@ -2125,13 +2161,13 @@ export const realHousings = [
     ],
     "highlights": [
       "중구 생활권",
-      "shopping·culture·transit 인프라",
+      "대중교통·카페·문화공간 인프라 우수",
       "6세대 규모"
     ],
     "commuteMinutes": {
       "centum": 37,
       "seomyeon": 26,
-      "haeundae": 40,
+      "haeundae": 41,
       "nampo": 11,
       "pnu": 46
     },
@@ -2147,7 +2183,8 @@ export const realHousings = [
     "similarEnv": "중구 일대의 전형적인 \"원도심·남포동 상권형\" 생활 리듬을 따릅니다.",
     "households": 6,
     "competitionRate": 1.3,
-    "competitionDate": "2025-12"
+    "competitionDate": "2025-12",
+    "addr": "부산광역시 중구 대교로 141"
   },
   {
     "id": "r25",
@@ -2163,13 +2200,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.107824,
-    "lng": 129.039016,
+    "lat": 35.101945,
+    "lng": 129.037408,
     "imageHue": 224,
     "lifestyleTags": [
-      "shopping",
-      "culture",
-      "transit"
+      "transit",
+      "cafe",
+      "culture"
     ],
     "summary": "중구 원도심·남포동 상권형",
     "infra": {
@@ -2215,15 +2252,15 @@ export const realHousings = [
     ],
     "highlights": [
       "중구 생활권",
-      "shopping·culture·transit 인프라",
+      "대중교통·카페·문화공간 인프라 우수",
       "7세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 35,
-      "seomyeon": 23,
-      "haeundae": 39,
-      "nampo": 13,
-      "pnu": 43
+      "centum": 37,
+      "seomyeon": 25,
+      "haeundae": 40,
+      "nampo": 12,
+      "pnu": 45
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -2235,7 +2272,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "중구 일대의 전형적인 \"원도심·남포동 상권형\" 생활 리듬을 따릅니다.",
-    "households": 7
+    "households": 7,
+    "addr": "부산광역시 중구 대교로 133"
   },
   {
     "id": "r26",
@@ -2252,13 +2290,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.098332,
-    "lng": 129.024232,
+    "lat": 35.100994,
+    "lng": 129.035502,
     "imageHue": 214,
     "lifestyleTags": [
-      "shopping",
-      "culture",
-      "transit"
+      "transit",
+      "cafe",
+      "culture"
     ],
     "summary": "중구 원도심·남포동 상권형",
     "infra": {
@@ -2304,15 +2342,15 @@ export const realHousings = [
     ],
     "highlights": [
       "중구 생활권",
-      "shopping·culture·transit 인프라",
+      "대중교통·카페·문화공간 인프라 우수",
       "15세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 39,
-      "seomyeon": 27,
+      "centum": 38,
+      "seomyeon": 26,
       "haeundae": 42,
-      "nampo": 12,
-      "pnu": 47
+      "nampo": 11,
+      "pnu": 46
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -2326,7 +2364,8 @@ export const realHousings = [
     "similarEnv": "중구 일대의 전형적인 \"원도심·남포동 상권형\" 생활 리듬을 따릅니다.",
     "households": 15,
     "competitionRate": 2.5,
-    "competitionDate": "2026-07"
+    "competitionDate": "2026-07",
+    "addr": "부산광역시 중구 해관로 23"
   },
   {
     "id": "r27",
@@ -2342,13 +2381,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2018,
-    "lat": 35.104284,
-    "lng": 129.039832,
+    "lat": 35.106473,
+    "lng": 129.035818,
     "imageHue": 141,
     "lifestyleTags": [
-      "shopping",
-      "culture",
-      "transit"
+      "transit",
+      "mart",
+      "cafe"
     ],
     "summary": "중구 원도심·남포동 상권형",
     "infra": {
@@ -2394,15 +2433,15 @@ export const realHousings = [
     ],
     "highlights": [
       "중구 생활권",
-      "shopping·culture·transit 인프라",
+      "대중교통·대형마트·카페 인프라 우수",
       "72세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 35,
-      "seomyeon": 24,
-      "haeundae": 39,
-      "nampo": 12,
-      "pnu": 44
+      "centum": 37,
+      "seomyeon": 25,
+      "haeundae": 40,
+      "nampo": 11,
+      "pnu": 45
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -2414,7 +2453,8 @@ export const realHousings = [
       "경사·계단이 있어 이동에 다소 불편할 수 있음"
     ],
     "similarEnv": "중구 일대의 전형적인 \"원도심·남포동 상권형\" 생활 리듬을 따릅니다.",
-    "households": 72
+    "households": 72,
+    "addr": "부산광역시 중구 중앙대로 99"
   },
   {
     "id": "r28",
@@ -2430,12 +2470,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "soon",
     "builtYear": 2019,
-    "lat": 35.127824,
-    "lng": 129.049572,
+    "lat": 35.136733,
+    "lng": 129.056173,
     "imageHue": 154,
     "lifestyleTags": [
       "transit",
-      "shopping"
+      "mart",
+      "gym"
     ],
     "summary": "동구 부산역·환승 중심형",
     "infra": {
@@ -2481,15 +2522,15 @@ export const realHousings = [
     ],
     "highlights": [
       "동구 생활권",
-      "transit·shopping 인프라",
+      "대중교통·대형마트·헬스장 인프라 우수",
       "17세대 규모"
     ],
     "commuteMinutes": {
       "centum": 30,
-      "seomyeon": 18,
+      "seomyeon": 17,
       "haeundae": 34,
       "nampo": 19,
-      "pnu": 38
+      "pnu": 37
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -2502,7 +2543,8 @@ export const realHousings = [
     "similarEnv": "동구 일대의 전형적인 \"부산역·환승 중심형\" 생활 리듬을 따릅니다.",
     "households": 17,
     "competitionRate": 2.0,
-    "competitionDate": "2026-05"
+    "competitionDate": "2026-05",
+    "addr": "부산광역시 동구 중앙대로 487"
   },
   {
     "id": "r29",
@@ -2518,12 +2560,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2016,
-    "lat": 35.13488,
-    "lng": 129.04854,
+    "lat": 35.125148,
+    "lng": 129.039451,
     "imageHue": 167,
     "lifestyleTags": [
       "transit",
-      "shopping"
+      "cafe",
+      "culture"
     ],
     "summary": "동구 부산역·환승 중심형",
     "infra": {
@@ -2569,7 +2612,7 @@ export const realHousings = [
     ],
     "highlights": [
       "동구 생활권",
-      "transit·shopping 인프라",
+      "대중교통·카페·문화공간 인프라 우수",
       "30세대 규모"
     ],
     "commuteMinutes": {
@@ -2589,7 +2632,8 @@ export const realHousings = [
       "성수기엔 주변 소음·혼잡이 있을 수 있음"
     ],
     "similarEnv": "동구 일대의 전형적인 \"부산역·환승 중심형\" 생활 리듬을 따릅니다.",
-    "households": 30
+    "households": 30,
+    "addr": "부산광역시 동구 홍곡남로18번길 6-6"
   },
   {
     "id": "r30",
@@ -2606,12 +2650,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2019,
-    "lat": 35.133512,
-    "lng": 129.049008,
+    "lat": 35.135725,
+    "lng": 129.046413,
     "imageHue": 206,
     "lifestyleTags": [
       "transit",
-      "shopping"
+      "mart",
+      "gym"
     ],
     "summary": "동구 부산역·환승 중심형",
     "infra": {
@@ -2657,12 +2702,12 @@ export const realHousings = [
     ],
     "highlights": [
       "동구 생활권",
-      "transit·shopping 인프라",
+      "대중교통·대형마트·헬스장 인프라 우수",
       "6세대 규모"
     ],
     "commuteMinutes": {
       "centum": 29,
-      "seomyeon": 17,
+      "seomyeon": 16,
       "haeundae": 34,
       "nampo": 20,
       "pnu": 36
@@ -2679,7 +2724,8 @@ export const realHousings = [
     "similarEnv": "동구 일대의 전형적인 \"부산역·환승 중심형\" 생활 리듬을 따릅니다.",
     "households": 6,
     "competitionRate": 1.9,
-    "competitionDate": "2025-11"
+    "competitionDate": "2025-11",
+    "addr": "부산광역시 동구 망양로846번길 15"
   },
   {
     "id": "r31",
@@ -2695,12 +2741,12 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2014,
-    "lat": 35.156572,
-    "lng": 129.047768,
+    "lat": 35.150246,
+    "lng": 129.033721,
     "imageHue": 208,
     "lifestyleTags": [
-      "shopping",
-      "startup",
+      "mart",
+      "cafe",
       "transit"
     ],
     "summary": "부산진구 서면 중심 번화가형",
@@ -2747,15 +2793,15 @@ export const realHousings = [
     ],
     "highlights": [
       "부산진구 생활권",
-      "shopping·startup·transit 인프라",
+      "대형마트·카페·대중교통 인프라 우수",
       "64세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 28,
+      "centum": 27,
       "seomyeon": 12,
-      "haeundae": 34,
-      "nampo": 25,
-      "pnu": 31
+      "haeundae": 33,
+      "nampo": 26,
+      "pnu": 30
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -2766,7 +2812,8 @@ export const realHousings = [
       "주차 여건이 넉넉하지 않은 편"
     ],
     "similarEnv": "부산진구 일대의 전형적인 \"서면 중심 번화가형\" 생활 리듬을 따릅니다.",
-    "households": 64
+    "households": 64,
+    "addr": "부산광역시 부산진구 가야대로552번길 79"
   },
   {
     "id": "r32",
@@ -2782,13 +2829,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2023,
-    "lat": 35.147116,
-    "lng": 129.049748,
+    "lat": 35.15263,
+    "lng": 129.039974,
     "imageHue": 220,
     "lifestyleTags": [
-      "shopping",
-      "startup",
-      "transit"
+      "transit",
+      "cafe",
+      "mart"
     ],
     "summary": "부산진구 서면 중심 번화가형",
     "infra": {
@@ -2834,15 +2881,15 @@ export const realHousings = [
     ],
     "highlights": [
       "부산진구 생활권",
-      "shopping·startup·transit 인프라",
+      "대중교통·카페·대형마트 인프라 우수",
       "8세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 28,
-      "seomyeon": 13,
+      "centum": 27,
+      "seomyeon": 12,
       "haeundae": 33,
-      "nampo": 23,
-      "pnu": 33
+      "nampo": 25,
+      "pnu": 32
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -2856,7 +2903,8 @@ export const realHousings = [
     "similarEnv": "부산진구 일대의 전형적인 \"서면 중심 번화가형\" 생활 리듬을 따릅니다.",
     "households": 8,
     "competitionRate": 2.4,
-    "competitionDate": "2026-07"
+    "competitionDate": "2026-07",
+    "addr": "부산광역시 부산진구 엄광로256번길 25-6"
   },
   {
     "id": "r33",
@@ -2873,13 +2921,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "closed",
     "builtYear": 2016,
-    "lat": 35.153188,
-    "lng": 129.052532,
+    "lat": 35.17028,
+    "lng": 129.068324,
     "imageHue": 164,
     "lifestyleTags": [
-      "shopping",
-      "startup",
-      "transit"
+      "transit",
+      "mart",
+      "gym"
     ],
     "summary": "부산진구 서면 중심 번화가형",
     "infra": {
@@ -2925,14 +2973,14 @@ export const realHousings = [
     ],
     "highlights": [
       "부산진구 생활권",
-      "shopping·startup·transit 인프라",
+      "대중교통·대형마트·헬스장 인프라 우수",
       "10세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 27,
-      "seomyeon": 12,
-      "haeundae": 33,
-      "nampo": 25,
+      "centum": 26,
+      "seomyeon": 11,
+      "haeundae": 32,
+      "nampo": 26,
       "pnu": 31
     },
     "pros": [
@@ -2945,7 +2993,8 @@ export const realHousings = [
       "초행길엔 골목이 헷갈릴 수 있음"
     ],
     "similarEnv": "부산진구 일대의 전형적인 \"서면 중심 번화가형\" 생활 리듬을 따릅니다.",
-    "households": 10
+    "households": 10,
+    "addr": "부산광역시 부산진구 중앙대로 889-8"
   },
   {
     "id": "r34",
@@ -2961,11 +3010,12 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2023,
-    "lat": 35.216124,
-    "lng": 129.08738,
+    "lat": 35.214452,
+    "lng": 129.068999,
     "imageHue": 173,
     "lifestyleTags": [
       "culture",
+      "mart",
       "transit"
     ],
     "summary": "동래구 온천장·전통 문화형",
@@ -3012,15 +3062,15 @@ export const realHousings = [
     ],
     "highlights": [
       "동래구 생활권",
-      "culture·transit 인프라",
+      "문화공간·대형마트·대중교통 인프라 우수",
       "11세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 25,
-      "seomyeon": 26,
+      "centum": 24,
+      "seomyeon": 25,
       "haeundae": 31,
-      "nampo": 42,
-      "pnu": 15
+      "nampo": 41,
+      "pnu": 16
     },
     "pros": [
       "도서관·문화시설이 가까움",
@@ -3034,7 +3084,8 @@ export const realHousings = [
     "similarEnv": "동래구 일대의 전형적인 \"온천장·전통 문화형\" 생활 리듬을 따릅니다.",
     "households": 11,
     "competitionRate": 2.1,
-    "competitionDate": "2025-11"
+    "competitionDate": "2025-11",
+    "addr": "부산광역시 동래구 우장춘로63번길 54"
   },
   {
     "id": "r35",
@@ -3050,13 +3101,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "soon",
     "builtYear": 2018,
-    "lat": 35.1748,
-    "lng": 129.069764,
+    "lat": 35.179866,
+    "lng": 129.066619,
     "imageHue": 150,
     "lifestyleTags": [
       "transit",
-      "shopping",
-      "startup"
+      "gym",
+      "mart"
     ],
     "summary": "연제구 시청·행정 중심 균형형",
     "infra": {
@@ -3102,15 +3153,15 @@ export const realHousings = [
     ],
     "highlights": [
       "연제구 생활권",
-      "transit·shopping·startup 인프라",
+      "대중교통·헬스장·대형마트 인프라 우수",
       "16세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 23,
-      "seomyeon": 15,
+      "centum": 22,
+      "seomyeon": 16,
       "haeundae": 29,
-      "nampo": 31,
-      "pnu": 25
+      "nampo": 32,
+      "pnu": 24
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -3122,7 +3173,8 @@ export const realHousings = [
       "경사·계단이 있어 이동에 다소 불편할 수 있음"
     ],
     "similarEnv": "연제구 일대의 전형적인 \"시청·행정 중심 균형형\" 생활 리듬을 따릅니다.",
-    "households": 16
+    "households": 16,
+    "addr": "부산광역시 연제구 해맞이로61번길 30"
   },
   {
     "id": "r36",
@@ -3138,12 +3190,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2016,
-    "lat": 35.102528,
-    "lng": 129.009456,
+    "lat": 35.11098,
+    "lng": 129.023835,
     "imageHue": 220,
     "lifestyleTags": [
-      "culture",
-      "transit"
+      "transit",
+      "gym",
+      "culture"
     ],
     "summary": "서구 원도심 산복도로·병원 인접형",
     "infra": {
@@ -3189,15 +3242,15 @@ export const realHousings = [
     ],
     "highlights": [
       "서구 생활권",
-      "culture·transit 인프라",
+      "대중교통·헬스장·문화공간 인프라 우수",
       "8세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 41,
-      "seomyeon": 28,
-      "haeundae": 45,
-      "nampo": 15,
-      "pnu": 47
+      "centum": 39,
+      "seomyeon": 27,
+      "haeundae": 43,
+      "nampo": 13,
+      "pnu": 46
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -3211,7 +3264,8 @@ export const realHousings = [
     "similarEnv": "서구 일대의 전형적인 \"원도심 산복도로·병원 인접형\" 생활 리듬을 따릅니다.",
     "households": 8,
     "competitionRate": 2.3,
-    "competitionDate": "2025-08"
+    "competitionDate": "2025-08",
+    "addr": "부산광역시 서구 보수대로154번길 42-4"
   },
   {
     "id": "r37",
@@ -3227,13 +3281,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2022,
-    "lat": 35.247936,
-    "lng": 129.228264,
+    "lat": 35.242435,
+    "lng": 129.210322,
     "imageHue": 212,
     "lifestyleTags": [
       "nature",
-      "leisure",
-      "startup"
+      "cafe",
+      "culture"
     ],
     "summary": "기장군 일광 해변 신도시 워케이션형",
     "infra": {
@@ -3279,15 +3333,15 @@ export const realHousings = [
     ],
     "highlights": [
       "기장군 생활권",
-      "nature·leisure·startup 인프라",
+      "자연·공원·카페·문화공간 인프라 우수",
       "10세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 39,
-      "seomyeon": 52,
-      "haeundae": 37,
-      "nampo": 66,
-      "pnu": 41
+      "centum": 35,
+      "seomyeon": 48,
+      "haeundae": 34,
+      "nampo": 62,
+      "pnu": 37
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -3299,7 +3353,8 @@ export const realHousings = [
       "평일 야간 유동인구가 적은 편"
     ],
     "similarEnv": "기장군 일대의 전형적인 \"일광 해변 신도시 워케이션형\" 생활 리듬을 따릅니다.",
-    "households": 10
+    "households": 10,
+    "addr": "부산광역시 기장군 기장읍 차성서로 101"
   },
   {
     "id": "r38",
@@ -3315,12 +3370,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2022,
-    "lat": 35.101456,
-    "lng": 128.977244,
+    "lat": 35.10198,
+    "lng": 128.996669,
     "imageHue": 140,
     "lifestyleTags": [
-      "shopping",
-      "nature"
+      "mart",
+      "cafe",
+      "transit"
     ],
     "summary": "사하구 낙동강·하단 생활형",
     "infra": {
@@ -3366,14 +3422,14 @@ export const realHousings = [
     ],
     "highlights": [
       "사하구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·카페·대중교통 인프라 우수",
       "7세대 규모"
     ],
     "commuteMinutes": {
       "centum": 47,
-      "seomyeon": 32,
-      "haeundae": 51,
-      "nampo": 22,
+      "seomyeon": 33,
+      "haeundae": 52,
+      "nampo": 23,
       "pnu": 50
     },
     "pros": [
@@ -3387,7 +3443,8 @@ export const realHousings = [
     "similarEnv": "사하구 일대의 전형적인 \"낙동강·하단 생활형\" 생활 리듬을 따릅니다.",
     "households": 7,
     "competitionRate": 2.5,
-    "competitionDate": "2026-04"
+    "competitionDate": "2026-04",
+    "addr": "부산광역시 사하구 낙동대로 180"
   },
   {
     "id": "r39",
@@ -3403,13 +3460,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2020,
-    "lat": 35.161508,
-    "lng": 128.993672,
+    "lat": 35.144364,
+    "lng": 128.988876,
     "imageHue": 140,
     "lifestyleTags": [
-      "startup",
       "transit",
-      "shopping"
+      "cafe",
+      "mart"
     ],
     "summary": "사상구 사상역 환승·산업단지형",
     "infra": {
@@ -3455,15 +3512,15 @@ export const realHousings = [
     ],
     "highlights": [
       "사상구 생활권",
-      "startup·transit·shopping 인프라",
+      "대중교통·카페·대형마트 인프라 우수",
       "4세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 39,
+      "centum": 40,
       "seomyeon": 24,
-      "haeundae": 45,
+      "haeundae": 46,
       "nampo": 28,
-      "pnu": 36
+      "pnu": 37
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -3474,7 +3531,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "사상구 일대의 전형적인 \"사상역 환승·산업단지형\" 생활 리듬을 따릅니다.",
-    "households": 4
+    "households": 4,
+    "addr": "부산광역시 사상구 학장로 213-20"
   },
   {
     "id": "r40",
@@ -3490,13 +3548,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.15264,
-    "lng": 128.989088,
+    "lat": 35.144364,
+    "lng": 128.988876,
     "imageHue": 206,
     "lifestyleTags": [
-      "startup",
       "transit",
-      "shopping"
+      "mart",
+      "cafe"
     ],
     "summary": "사상구 사상역 환승·산업단지형",
     "infra": {
@@ -3542,7 +3600,7 @@ export const realHousings = [
     ],
     "highlights": [
       "사상구 생활권",
-      "startup·transit·shopping 인프라",
+      "대중교통·대형마트·카페 인프라 우수",
       "8세대 규모"
     ],
     "commuteMinutes": {
@@ -3563,7 +3621,8 @@ export const realHousings = [
     "similarEnv": "사상구 일대의 전형적인 \"사상역 환승·산업단지형\" 생활 리듬을 따릅니다.",
     "households": 8,
     "competitionRate": 1.5,
-    "competitionDate": "2026-03"
+    "competitionDate": "2026-03",
+    "addr": "부산광역시 사상구 학장로 213-20"
   },
   {
     "id": "r41",
@@ -3579,12 +3638,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2022,
-    "lat": 35.13068,
-    "lng": 129.042708,
+    "lat": 35.138276,
+    "lng": 129.061543,
     "imageHue": 196,
     "lifestyleTags": [
       "transit",
-      "shopping"
+      "gym",
+      "cafe"
     ],
     "summary": "동구 부산역·환승 중심형",
     "infra": {
@@ -3630,14 +3690,14 @@ export const realHousings = [
     ],
     "highlights": [
       "동구 생활권",
-      "transit·shopping 인프라",
+      "대중교통·헬스장·카페 인프라 우수",
       "13세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 31,
-      "seomyeon": 18,
-      "haeundae": 36,
-      "nampo": 19,
+      "centum": 30,
+      "seomyeon": 17,
+      "haeundae": 35,
+      "nampo": 20,
       "pnu": 37
     },
     "pros": [
@@ -3650,7 +3710,8 @@ export const realHousings = [
       "주차 여건이 넉넉하지 않은 편"
     ],
     "similarEnv": "동구 일대의 전형적인 \"부산역·환승 중심형\" 생활 리듬을 따릅니다.",
-    "households": 13
+    "households": 13,
+    "addr": "부산광역시 동구 범일로90번길 17"
   },
   {
     "id": "r42",
@@ -3667,13 +3728,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "soon",
     "builtYear": 2020,
-    "lat": 35.163232,
-    "lng": 129.060452,
+    "lat": 35.169766,
+    "lng": 129.03391,
     "imageHue": 158,
     "lifestyleTags": [
-      "shopping",
-      "startup",
-      "transit"
+      "transit",
+      "cafe",
+      "gym"
     ],
     "summary": "부산진구 서면 중심 번화가형",
     "infra": {
@@ -3719,15 +3780,15 @@ export const realHousings = [
     ],
     "highlights": [
       "부산진구 생활권",
-      "shopping·startup·transit 인프라",
+      "대중교통·카페·헬스장 인프라 우수",
       "1세대 규모"
     ],
     "commuteMinutes": {
       "centum": 25,
       "seomyeon": 11,
       "haeundae": 31,
-      "nampo": 28,
-      "pnu": 28
+      "nampo": 27,
+      "pnu": 29
     },
     "pros": [
       "버스·지하철 환승이 편리함",
@@ -3741,7 +3802,8 @@ export const realHousings = [
     "similarEnv": "부산진구 일대의 전형적인 \"서면 중심 번화가형\" 생활 리듬을 따릅니다.",
     "households": 1,
     "competitionRate": 3.1,
-    "competitionDate": "2026-05"
+    "competitionDate": "2026-05",
+    "addr": "부산광역시 부산진구 당감서로 112"
   },
   {
     "id": "r43",
@@ -3757,12 +3819,13 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2013,
-    "lat": 35.143884,
-    "lng": 129.101348,
+    "lat": 35.118408,
+    "lng": 129.084649,
     "imageHue": 168,
     "lifestyleTags": [
       "nature",
-      "leisure"
+      "mart",
+      "transit"
     ],
     "summary": "남구 이기대·경성대 문화형",
     "infra": {
@@ -3808,15 +3871,15 @@ export const realHousings = [
     ],
     "highlights": [
       "남구 생활권",
-      "nature·leisure 인프라",
+      "자연·공원·대형마트·대중교통 인프라 우수",
       "9세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 19,
-      "seomyeon": 20,
-      "haeundae": 23,
-      "nampo": 29,
-      "pnu": 33
+      "centum": 20,
+      "seomyeon": 19,
+      "haeundae": 24,
+      "nampo": 28,
+      "pnu": 34
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -3828,7 +3891,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "남구 일대의 전형적인 \"이기대·경성대 문화형\" 생활 리듬을 따릅니다.",
-    "households": 9
+    "households": 9,
+    "addr": "부산광역시 남구 양지골로 236"
   },
   {
     "id": "r44",
@@ -3845,12 +3909,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "closed",
     "builtYear": 2023,
-    "lat": 35.240072,
-    "lng": 129.081176,
+    "lat": 35.274059,
+    "lng": 129.085757,
     "imageHue": 148,
     "lifestyleTags": [
+      "nature",
       "culture",
-      "nature"
+      "cafe"
     ],
     "summary": "금정구 부산대 캠퍼스·산책형",
     "infra": {
@@ -3896,15 +3961,15 @@ export const realHousings = [
     ],
     "highlights": [
       "금정구 생활권",
-      "culture·nature 인프라",
+      "자연·공원·문화공간·카페 인프라 우수",
       "8세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 31,
-      "seomyeon": 32,
-      "haeundae": 37,
-      "nampo": 48,
-      "pnu": 12
+      "centum": 29,
+      "seomyeon": 30,
+      "haeundae": 35,
+      "nampo": 46,
+      "pnu": 10
     },
     "pros": [
       "공원·산책로 등 자연 접근성이 좋음",
@@ -3918,7 +3983,8 @@ export const realHousings = [
     "similarEnv": "금정구 일대의 전형적인 \"부산대 캠퍼스·산책형\" 생활 리듬을 따릅니다.",
     "households": 8,
     "competitionRate": 3.8,
-    "competitionDate": "2026-07"
+    "competitionDate": "2026-07",
+    "addr": "부산광역시 금정구 청룡로61번길 28"
   },
   {
     "id": "r45",
@@ -3935,12 +4001,13 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "open",
     "builtYear": 2017,
-    "lat": 35.23376,
-    "lng": 129.08216,
+    "lat": 35.241593,
+    "lng": 129.095206,
     "imageHue": 169,
     "lifestyleTags": [
       "culture",
-      "nature"
+      "nature",
+      "cafe"
     ],
     "summary": "금정구 부산대 캠퍼스·산책형",
     "infra": {
@@ -3986,15 +4053,15 @@ export const realHousings = [
     ],
     "highlights": [
       "금정구 생활권",
-      "culture·nature 인프라",
+      "문화공간·자연·공원·카페 인프라 우수",
       "14세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 29,
-      "seomyeon": 30,
-      "haeundae": 35,
-      "nampo": 46,
-      "pnu": 10
+      "centum": 28,
+      "seomyeon": 29,
+      "haeundae": 34,
+      "nampo": 45,
+      "pnu": 11
     },
     "pros": [
       "도서관·문화시설이 가까움",
@@ -4006,7 +4073,8 @@ export const realHousings = [
       "경사·계단이 있어 이동에 다소 불편할 수 있음"
     ],
     "similarEnv": "금정구 일대의 전형적인 \"부산대 캠퍼스·산책형\" 생활 리듬을 따릅니다.",
-    "households": 14
+    "households": 14,
+    "addr": "부산광역시 금정구 기찰로108번길 33"
   },
   {
     "id": "r46",
@@ -4023,13 +4091,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2017,
-    "lat": 35.154552,
-    "lng": 129.157384,
+    "lat": 35.229321,
+    "lng": 129.157932,
     "imageHue": 172,
     "lifestyleTags": [
-      "leisure",
-      "shopping",
-      "culture"
+      "cafe",
+      "gym",
+      "mart"
     ],
     "summary": "해운대구 해변·관광 인프라 최상급형",
     "infra": {
@@ -4075,15 +4143,15 @@ export const realHousings = [
     ],
     "highlights": [
       "해운대구 생활권",
-      "leisure·shopping·culture 인프라",
+      "카페·헬스장·대형마트 인프라 우수",
       "15세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 17,
-      "seomyeon": 31,
-      "haeundae": 11,
-      "nampo": 40,
-      "pnu": 36
+      "centum": 10,
+      "seomyeon": 26,
+      "haeundae": 16,
+      "nampo": 38,
+      "pnu": 30
     },
     "pros": [
       "카페·베이커리 밀집도가 높아 일상 동선이 편함",
@@ -4097,7 +4165,8 @@ export const realHousings = [
     "similarEnv": "해운대구 일대의 전형적인 \"해변·관광 인프라 최상급형\" 생활 리듬을 따릅니다.",
     "households": 15,
     "competitionRate": 6.9,
-    "competitionDate": "2026-02"
+    "competitionDate": "2026-02",
+    "addr": "부산광역시 해운대구 신반송로 17"
   },
   {
     "id": "r47",
@@ -4113,13 +4182,13 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2017,
-    "lat": 35.136624,
-    "lng": 129.11696,
+    "lat": 35.154023,
+    "lng": 129.112475,
     "imageHue": 228,
     "lifestyleTags": [
-      "leisure",
       "culture",
-      "nature"
+      "nature",
+      "cafe"
     ],
     "summary": "수영구 광안리·민락 카페거리형",
     "infra": {
@@ -4165,15 +4234,15 @@ export const realHousings = [
     ],
     "highlights": [
       "수영구 생활권",
-      "leisure·culture·nature 인프라",
+      "문화공간·자연·공원·카페 인프라 우수",
       "10세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 19,
-      "seomyeon": 23,
+      "centum": 17,
+      "seomyeon": 21,
       "haeundae": 21,
-      "nampo": 30,
-      "pnu": 36
+      "nampo": 31,
+      "pnu": 33
     },
     "pros": [
       "도서관·문화시설이 가까움",
@@ -4185,7 +4254,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "수영구 일대의 전형적인 \"광안리·민락 카페거리형\" 생활 리듬을 따릅니다.",
-    "households": 10
+    "households": 10,
+    "addr": "부산광역시 수영구 수영로 542"
   },
   {
     "id": "r48",
@@ -4202,11 +4272,12 @@ export const realHousings = [
     "areaMax": 33.0,
     "status": "open",
     "builtYear": 2020,
-    "lat": 35.208164,
-    "lng": 129.002864,
+    "lat": 35.252664,
+    "lng": 129.013643,
     "imageHue": 180,
     "lifestyleTags": [
-      "shopping",
+      "mart",
+      "transit",
       "nature"
     ],
     "summary": "북구 화명·구포 신도시 가족형",
@@ -4253,15 +4324,15 @@ export const realHousings = [
     ],
     "highlights": [
       "북구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·대중교통·자연·공원 인프라 우수",
       "7세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 39,
-      "seomyeon": 27,
-      "haeundae": 45,
-      "nampo": 39,
-      "pnu": 28
+      "centum": 38,
+      "seomyeon": 26,
+      "haeundae": 44,
+      "nampo": 38,
+      "pnu": 27
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -4275,7 +4346,8 @@ export const realHousings = [
     "similarEnv": "북구 일대의 전형적인 \"화명·구포 신도시 가족형\" 생활 리듬을 따릅니다.",
     "households": 7,
     "competitionRate": 1.2,
-    "competitionDate": "2026-04"
+    "competitionDate": "2026-04",
+    "addr": "부산광역시 북구 효열로 75-5"
   },
   {
     "id": "r49",
@@ -4292,11 +4364,12 @@ export const realHousings = [
     "areaMax": 45.0,
     "status": "soon",
     "builtYear": 2017,
-    "lat": 35.114176,
-    "lng": 128.973392,
+    "lat": 35.05633,
+    "lng": 128.966762,
     "imageHue": 144,
     "lifestyleTags": [
-      "shopping",
+      "mart",
+      "transit",
       "nature"
     ],
     "summary": "사하구 낙동강·하단 생활형",
@@ -4343,15 +4416,15 @@ export const realHousings = [
     ],
     "highlights": [
       "사하구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·대중교통·자연·공원 인프라 우수",
       "1세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 46,
-      "seomyeon": 31,
-      "haeundae": 51,
-      "nampo": 23,
-      "pnu": 48
+      "centum": 47,
+      "seomyeon": 32,
+      "haeundae": 52,
+      "nampo": 24,
+      "pnu": 49
     },
     "pros": [
       "장보기·생활편의 인프라가 탄탄함",
@@ -4363,7 +4436,8 @@ export const realHousings = [
       "대형 쇼핑시설까지는 다소 거리가 있음"
     ],
     "similarEnv": "사하구 일대의 전형적인 \"낙동강·하단 생활형\" 생활 리듬을 따릅니다.",
-    "households": 1
+    "households": 1,
+    "addr": "부산광역시 사하구 윤공단로17번길 103"
   },
   {
     "id": "r50",
@@ -4379,11 +4453,12 @@ export const realHousings = [
     "areaMax": 26.0,
     "status": "open",
     "builtYear": 2017,
-    "lat": 35.107036,
-    "lng": 128.970212,
+    "lat": 35.057729,
+    "lng": 128.968178,
     "imageHue": 222,
     "lifestyleTags": [
-      "shopping",
+      "mart",
+      "transit",
       "nature"
     ],
     "summary": "사하구 낙동강·하단 생활형",
@@ -4430,14 +4505,14 @@ export const realHousings = [
     ],
     "highlights": [
       "사하구 생활권",
-      "shopping·nature 인프라",
+      "대형마트·대중교통·자연·공원 인프라 우수",
       "22세대 규모"
     ],
     "commuteMinutes": {
-      "centum": 47,
+      "centum": 48,
       "seomyeon": 33,
       "haeundae": 52,
-      "nampo": 23,
+      "nampo": 24,
       "pnu": 50
     },
     "pros": [
@@ -4452,6 +4527,7 @@ export const realHousings = [
     "similarEnv": "사하구 일대의 전형적인 \"낙동강·하단 생활형\" 생활 리듬을 따릅니다.",
     "households": 22,
     "competitionRate": 1.9,
-    "competitionDate": "2026-02"
+    "competitionDate": "2026-02",
+    "addr": "부산광역시 사하구 윤공단로56번길 11"
   }
 ]

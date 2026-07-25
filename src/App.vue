@@ -94,13 +94,13 @@ import { rankHousings } from './utils/matchScore'
 import { assets } from './assets/images'
 
 const initialPrefs = () => ({
-  eligibility: ['youth'],
+  eligibility: [],
   types: [],
-  lifestyles: ['cafe', 'transit'],
+  lifestyles: [],
   districts: [],
-  depositMax: 2000,
-  areaMin: 20,
-  areaMax: 60,
+  depositMax: 5000,
+  areaMin: 0,
+  areaMax: 120,
   commuteDestination: null,
   walkMinutes: 15
 })

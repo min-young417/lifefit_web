@@ -34,6 +34,26 @@ export const TAG_COLORS = {
   bank: '#4A4E69'
 }
 
+/**
+ * 주소 → 실제 좌표 변환 (카카오맵 SDK Geocoder, REST 직접호출 아니라서 CORS 문제 없음)
+ * @param {string} address
+ * @returns {Promise<{lat:number, lng:number}|null>}
+ */
+export async function geocodeAddress(address) {
+  if (!address) return null
+  const maps = await loadKakaoMap()
+  const geocoder = new maps.services.Geocoder()
+  return new Promise((resolve) => {
+    geocoder.addressSearch(address, (result, status) => {
+      if (status === maps.services.Status.OK && result?.[0]) {
+        resolve({ lat: Number(result[0].y), lng: Number(result[0].x) })
+      } else {
+        resolve(null)
+      }
+    })
+  })
+}
+
 function runSearch(maps, places, tag, center, radius) {
   const cfg = TAG_SEARCH[tag]
   if (!cfg) return Promise.resolve([])
