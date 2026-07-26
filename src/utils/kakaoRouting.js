@@ -31,14 +31,15 @@ const WALK_STATUS_LABEL = {
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 
-function restKey() {
-  return process.env.VUE_APP_KAKAO_REST_API_KEY
-}
-
-/** 개발 서버(프록시가 인증 안 붙여줌)에서만 클라이언트 키를 직접 첨부.
- * 배포 환경은 /api/kakao-routing 서버리스 함수가 자체 키로 인증하므로 불필요 */
+/**
+ * 개발: vue.config.js 프록시가 Authorization을 붙이므로 클라이언트 키 불필요.
+ * (구버전 호환으로 VUE_APP_ 키가 있으면 헤더에도 첨부)
+ * 배포: /api/kakao-routing 서버리스가 자체 키로 인증.
+ */
 function authHeaders() {
-  return IS_DEV ? { Authorization: `KakaoAK ${restKey()}` } : {}
+  if (!IS_DEV) return {}
+  const key = process.env.VUE_APP_KAKAO_REST_API_KEY
+  return key ? { Authorization: `KakaoAK ${key}` } : {}
 }
 
 /** 실패 응답 본문에서 카카오가 내려주는 실제 사유(message/msg)를 최대한 뽑아냄 */
@@ -64,8 +65,6 @@ function flattenPoints(pointArrays) {
  * @returns {Promise<{totalTime:number, totalDistance:number, transfers:number, type:string, fare:number|null, steps:object[], points:object[]}|null>}
  */
 export async function fetchTransitRoute(origin, destination) {
-  if (IS_DEV && !restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
-
   const params = new URLSearchParams({
     start_x: String(origin.lng),
     start_y: String(origin.lat),
@@ -109,8 +108,6 @@ export async function fetchTransitRoute(origin, destination) {
  * @returns {Promise<{totalTime:number, totalDistance:number, points:object[]}|null>}
  */
 export async function fetchWalkRoute(origin, destination) {
-  if (IS_DEV && !restKey()) throw new Error('REST API 키(VUE_APP_KAKAO_REST_API_KEY)가 설정되지 않았습니다.')
-
   const params = new URLSearchParams({
     start_x: String(origin.lng),
     start_y: String(origin.lat),
